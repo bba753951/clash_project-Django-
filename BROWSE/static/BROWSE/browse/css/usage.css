@@ -1,0 +1,76 @@
+.progress {
+  /*position: relative;*/
+  /*float: left;*/
+  width: 300px;
+  height: 20px;
+  background-color: rgba(0,0,0,0.15);
+  padding: 5px;  
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.bar {
+  /*position: relative;*/
+  width: 0%;
+  height: 10px;
+  border-radius: 8px;    
+  background-color: white;
+}
+
+.percentage {
+  background-color: #D9290B;
+  border-radius: 15px;
+  height: 20px; 
+  box-sizing: border-box;
+  width: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  font-size: 0.8rem;
+  text-align: center;  
+  float:left;
+  line-height: 20px !important;
+  margin: 0 0 0 10px;
+}
+
+.line,#pbar{
+    display:flex;
+	flex-direction: row;
+	margin-top: 15px;
+}
+#pbar{
+	justify-content: center;
+	margin-top: 20px;
+	display:none;
+}
+.line>div{
+	flex: 1 0 auto;
+	overflow:hidden;
+	width:20%;
+}
+.outter{
+	display: flex;
+	flex-direction: row;
+}
+.left-opt,.right-opt{
+	flex:1;
+}
+.left-opt{
+	width:45%
+}
+.right-opt{
+	width:35%
+}
+#search {
+	margin-top: 20px;
+}
+
+.info{
+	color:white;
+    font-size: 10px;　　　　　          /* 設定文字大小 */
+    line-height: 20px;　　　          　/* 設定文字行距 */
+    letter-spacing: 3px;
+}
+
+.flow_hover{
+	background-color:yellow;
+}

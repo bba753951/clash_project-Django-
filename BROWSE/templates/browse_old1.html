@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {% load staticfiles %}
+  <script> 
+    var upload_url="{% url 'upload_url' %}"
+    var site_link="{% url 'site_link' %}"
+    var copy_example_url="{% url 'copy_example' %}"
+    {% comment %}var data_url="/master_project/master_media/uploadfile/aaa.txt"{% endcomment %}
+  </script>
+  <link rel="stylesheet" type="text/css" href="{%static 'BROWSE/browse/css/browse.css'%}">
+
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+
+  <meta charset="utf-8">
+  <title> browse</title>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+</head>
+
+<body>
+  <header>
+    <h2 class="top"><a href="/">Target <br>Algorithm</a></h2>
+
+    <nav>
+      <ul>
+        <li><a href="#">Browse</a></li>
+        <li><a href="#">Download</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+  </header>
+
+  </nav>
+
+  <main class="border">
+    <div class="select_container">
+      <div class="select_flex">
+
+        <div class="ptitle"><b>Select Browse Type:</b></div>
+
+          <div class="wrapper">
+            <input class="state" type="radio" name="app" id="regulator" value="regulator" checked>
+            <label class="label" for="regulator">
+              <div class="indicator"></div>
+              <span class="text">Regulator</span>
+            </label>
+          </div>
+          <div class="wrapper">
+            <input class="state" type="radio" name="app" id="transcript" value="transcript">
+            <label class="label" for="transcript">
+              <div class="indicator"></div>
+              <span class="text">Transcript</span>
+            </label>
+          </div>
+      </div>
+
+    </div>
+
+    <div class="select_flex">
+
+      <div class="ptitle"><b>Select Score:</b></div>
+      <label>
+        <input type="text" id="RNAup_score" placeholder="RNAup_score">
+      </label>
+      <label>
+        <input type="text" id="RNAfold_MFE" placeholder="RNAfold_MFE">
+      </label>
+      <label>
+        <input type="text" id="GU_target_score" placeholder="GU_target_score">
+      </label>
+    </div>
+    <div class="select_flex">
+      <div class="ptitle"><b>Upload File:</b></div>
+      <div class="file btn btn1">
+        <span>Transcript Name</span><input type="file" name="transcript_file">
+      </div>
+      <div class="file btn btn1">
+        <span>Regulator Name</span><input type="file" name="regulator_file">
+      </div>
+      <div class="file btn btn1">
+        <span>Original Output</span><input type="file" name="original_file">
+      </div>
+      <div class="file btn btn1">
+        <span>Gene to Transcript</span><input type="file" name="gene_file">
+      </div>
+
+    </div>
+    <button type="button" id="search">Browse</button>
+        <div>
+            <input type="checkbox" id="example_data">
+            <label for="example_data">use example data</label>
+        </div>
+    </div>
+
+    <table id="example" class="display" style="width:100%">
+      <thead>
+        <tr>
+          <td></td>
+        </tr>
+      </thead>
+    </table>
+
+  </main>
+
+  <footer>
+    <p>©Copyright 2020 by NCKU Computational Systems Biology Lab. All rights reversed.</p>
+  </footer>
+
+</body>
+<script src="{%static 'BROWSE/browse/js/browse.js'%}"></script>
+</html>

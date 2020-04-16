@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load staticfiles %}
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script> 
+        var upload_url="{% url 'upload_url' %}"
+        var site_link="{% url 'site_link' %}"
+        {% comment %}var data_url="/master_project/master_media/uploadfile/aaa.txt"{% endcomment %}
+    </script>
+
+
+    <meta charset="utf-8">
+    <title> browse</title>
+    <link rel="stylesheet" type="text/css" href="{%static 'BROWSE/browse/css/browse.css'%}">
+
+    <link href="https://fonts.googleapis.com/css?family=Germania+One" rel="stylesheet">
+    {% comment %}<link rel="shortcut icon" href="{%static 'stock/guess/images/dog_favicon.ico'%}" />{% endcomment %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+  </head>
+  <body>
+  <div id="container">
+    <header>
+        <h1>TarBase</h1>
+    </header>
+        <nav>
+      <ul>
+        <li><a href="#">Browse</a></li>
+        <li><a href="#">Download</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+
+    </nav>
+
+<main>
+<h2>select</h2>
+<div class="select_container">
+        <div class="select_flex">
+
+            <div class="select_content"><b>Select Browse type:</b></div>
+            <div class="select_content">
+                <input type="radio" name="type" value="regulator" id="regulator" checked>
+                <label for="regulator">Regulator</label>
+            </div>
+            <div class="select_content">
+                <input type="radio" name="type" value="transcript" id="transcript">
+                <label for="transcript">Transcript</label>
+            </div>
+        </div>
+
+        <div class="select_flex">
+
+            <div class="select_content">
+                <label for="RNAup_score">RNAup_score:</label>
+                <input type="text" id="RNAup_score">
+            </div>
+            <div class="select_content">
+                <label for="RNAfold_MFE">RNAfold_MFE:</label>
+                <input type="text" id="RNAfold_MFE">
+            </div>
+
+            <div class="select_content">
+                <label for="GU_target_score">GU_target_score:</label>
+                <input type="text" id="GU_target_score">
+            </div>
+        </div>
+        <div class="select_flex">
+            <div class="select_content"><b>UPLOAD FILE:</b></div>
+            <div class="file">
+                Transcript Name<input type="file" name="transcript_file">
+            </div>
+            <div class="file">
+                Regulator Name<input type="file" name="regulator_file">
+            </div>
+            <div class="file">
+                Original Output<input type="file" name="original_file">
+            </div>
+            <div class="file">
+                Gene to Transcript<input type="file" name="gene_file">
+            </div>
+
+        </div>
+        <div class="select_btn">
+            <button type="button" class="btn" id="search">Browse</button>
+        </div>
+</div>
+
+<table id="example" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <td></td>
+        </tr>
+    </thead>
+</table>
+
+</main>
+
+
+    <footer>
+      <p>©Copyright 2020 by NCKU Computational Systems Biology Lab. All rights reversed.</p>
+    </footer>
+    
+    </div>
+      </body>
+
+      <script src="{%static 'BROWSE/browse/js/browse.js'%}"></script>
+    </html>

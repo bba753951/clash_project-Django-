@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block script_var %}
+<script>
+    var upload_url="{% url 'upload_url' %}"
+    var site_link="{% url 'site_link' %}"
+    var copy_example_url="{% url 'copy_example' %}"
+    var folder_id = "{{ folder_id |safe}}";
+    {% comment %}var data_url="/master_project/master_media/uploadfile/aaa.txt"{% endcomment %}
+</script>
+{% endblock %}
+
+{% block importfile %}
+{{ block.super }}
+
+  <!--datables-->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+	<!--qtip2-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet"  />
+
+	<!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <!-- self-define -->
+  <link rel="stylesheet" type="text/css" href="{%static 'BROWSE/browse/css/browse.css'%}">
+
+{% endblock %}
+
+{% block title %}Browse{% endblock %}
+
+
+{% block main %}
+    <div class="select_container">
+
+    <div class="select_file">
+      <div class="ptitle"><b>Select File From:</b></div>
+          <div class="wrapper">
+            <input class="state" type="radio" name="file" id="ID" value="ID" checked>
+            <label class="label" for="ID">
+              <div class="indicator"></div>
+              <span class="text">ID</span>
+            </label>
+          </div>
+          <div class="wrapper">
+            <input class="state" type="radio" name="file" id="upload" value="upload">
+            <label class="label" for="upload">
+              <div class="indicator"></div>
+              <span class="text">Upload File</span>
+            </label>
+          </div>
+
+        <div class="file_check">
+            <div class="file btn btn1">
+                <span>Upload file<br><span class="cfile">(no file)</span></span><input type="file" name="upload_file">
+            </div>
+            <div class="example_div">
+                <input type="checkbox" id="example_data">
+                <label for="example_data">use example data</label>
+                <a href="/master_project/master_media/example.zip">(download example data)</a>
+            </div>
+        </div>
+        <div class="ID_check">
+          <label>
+            <input type="text" id="folder_id" placeholder="File ID">
+          </label>
+        </div>
+
+
+
+    
+
+    </div>
+
+    <div class="select_type">
+
+        <div class="ptitle"><b>Select Browse Type:</b></div>
+
+          <div class="wrapper">
+            <input class="state" type="radio" name="browse" id="regulator" value="regulator" checked>
+            <label class="label" for="regulator">
+              <div class="indicator"></div>
+              <span class="text">Regulator</span>
+            </label>
+          </div>
+          <div class="wrapper">
+            <input class="state" type="radio" name="browse" id="transcript" value="transcript">
+            <label class="label" for="transcript">
+              <div class="indicator"></div>
+              <span class="text">Transcript</span>
+            </label>
+          </div>
+      </div>
+
+    </div>
+
+
+    <div class="select_score">
+
+        <div class="ptitle"><b>Select Score:</b><span class="cfile">(default None)</span></div>
+      <label>
+        <input type="text" id="RNAup_score" placeholder="RNAup_score">
+      </label>
+      <label>
+        <input type="text" id="RNAfold_MFE" placeholder="RNAfold_MFE">
+      </label>
+      <label>
+        <input type="text" id="GU_target_score" placeholder="GU_target_score">
+      </label>
+    </div>
+    <a href="#example"><button type="button" id="search">
+            <span>B</span><span>R</span><span>O</span><span>W</span><span>S</span><span>E</span>
+        </button></a>
+
+        
+    <div class="option_container">
+        <div class="option">
+            <a id="download_output">download output data</a>
+        </div>
+        <div id="input_para" class="option">
+            see input parameter
+        </div>
+    </div>
+
+    <table id="example" class="display" style="width:100%">
+      <thead>
+        <tr>
+          <td></td>
+        </tr>
+      </thead>
+    </table>
+    </div>
+{% endblock %}  
+{% block jsfile %}
+<script src="{%static 'BROWSE/browse/js/browse.js'%}"></script>
+{% endblock %}

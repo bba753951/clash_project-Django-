@@ -1,0 +1,136 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body, html {
+  background-color: #EBECF0;
+  font-size: 15px;
+  height:100%;
+}
+body {
+	position:relative;
+}
+
+
+body, p, input, select, textarea, button {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: -0.2px;
+  font-size: 16px;
+}
+
+div{
+  color: #98a5bf;
+  /*text-shadow: 1px 1px 1px #FFF;*/
+}
+
+nav li a, button, h1,.head2{
+  text-transform: uppercase;
+}
+
+a {
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.head2 {
+  font-size: 300%;
+  /* line-height: 40px; */
+  margin-left: 30px;
+  display: block;
+  float: left;
+  cursor: pointer;
+  -webkit-text-stroke-color: #fff;
+  -webkit-text-stroke-width: 0.02em;
+  -webkit-text-fill-color: transparent;
+
+  -webkit-background-clip: text;	/*for Google Chrome、Safari*/
+  background-clip: text;		/*for IE*/
+  -moz-background-clip: text;	 /*for Firefox*/
+  -o-background-clip: text;		/*for Opera*/
+  transition: background-size 0.5s cubic-bezier(0.67, 0.01, 0.15, 0.98);
+}
+
+.top {
+  background-image: linear-gradient(180deg, #585858 0%, #aab7d1 80%, transparent 50%);
+  background-position: 100% 0%;
+  background-size: 100% 200%;
+    -webkit-background-size: 100% 200%;           /* Safari 3.0 */
+     -moz-background-size: 100% 200%;           /* Gecko 1.9.2 (Firefox 3.6) */
+       -o-background-size: 100% 200%;           /* Opera 9.5 */
+}
+.top:hover {
+  background-size: 100% 0%;
+  -webkit-text-stroke-color: #000000;
+}
+
+
+nav ul {
+  float: right;
+  margin-top: 63px;
+  margin-right: 30px;
+}
+nav ul li {
+  display: inline-block;
+}
+nav ul li a {
+  float: right;
+  color: #000;
+  margin-left: 90px;
+  padding-bottom: 4px;
+  font-size: 150%;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom .2s;
+
+}
+nav ul li a:hover {
+  text-decoration: underline;
+}
+nav ul li:first-child a {
+  margin-left: 0;
+}
+
+header {
+  overflow: hidden;
+ /*flex: 0 0 auto;*/
+}
+
+
+.border {
+  text-align:center;
+  width: 70%;
+  margin: 8% auto;
+  padding: 30px 10px;
+  border-radius: 16px;
+  background: #ecf0f3;
+  box-shadow: 4px 4px 4px 0px #d1d9e6 inset, -4px -4px 4px 0px #ffffff inset;
+}
+
+
+footer {
+	width: 100%;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  margin:0 auto;
+/*flex: 0 0 auto;*/
+  opacity:0.2;
+}
+table{
+	color:#394a56;
+}
+label{
+	color:#394a56;
+}
+
+.file_check{
+    display:none;
+}

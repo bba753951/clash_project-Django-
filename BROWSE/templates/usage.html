@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block script_var %}
+<script>
+    var usage_url="{% url 'upload_usage' %}"
+    {% comment %}var data_url="/master_project/master_media/uploadfile/aaa.txt"{% endcomment %}
+</script>
+{% endblock %}
+
+{% block importfile %}
+{{ block.super }}
+
+	<!--qtip2-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet"  />
+	<!-- D3 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+
+	<!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+  <!-- self-define -->
+  <link rel="stylesheet" type="text/css" href="{%static 'BROWSE/browse/css/usage.css'%}">
+
+{% endblock %}
+
+{% block title %}Browse{% endblock %}
+
+
+{% block main %}
+<div class="outter">
+<div class="left-opt">
+    <a href="/master_project/master_media/usage_example.zip">(download example data)</a>
+    <span>Adaptor: AGATCGGAAGAG</span>
+<div class="line">
+    <div>
+    <label id="d_uf">Upload File:</label>
+    </div>
+    <div>
+    <input type="file" name="zip_file">
+    </div>
+</div>
+
+<div class="line">
+    <div>
+    <label id="d_as">Adaptor Sequence:</label>
+    </div>
+    <div>
+    <input type="text" id="adaptor" placeholder="e.g.,AGATCGGAAGAGC">
+    </div>
+</div>
+
+<div class="line">
+    <div>
+    <label id="d_hl">Hybrid Length:</label>
+    </div>
+    <div>
+    <input type="text" id="hyb_len" placeholder="default:17">
+    </div>
+</div>
+
+<div class="line">
+    <div>
+    <label id="d_rc">Read Count:</label>
+    </div>
+    <div>
+    <input type="text" id="readCount" placeholder="defualt:0">
+    </div>
+</div>
+
+<div class="line">
+    <div>
+    <label id="d_rm">RNAfold_MFE:</label>
+    </div>
+    <div>
+    <input type="text" id="RNAfold_MFE" placeholder="default:None">
+    </div>
+</div>
+<div class="line">
+    <div>
+    <label id="d_rhm">Reg_Hyb Mismatch:</label>
+    </div>
+    <div>
+    <input type="text" id="reg_hyb_mis" placeholder="default:0">
+    </div>
+</div>
+<div class="line">
+    <div>
+    <label id="d_rsl">Remaining Sequence Length:</label>
+    </div>
+    <div>
+    <input type="text" id="rem_len" placeholder="default:15">
+    </div>
+</div>
+<div class="line">
+    <div>
+    <label id="d_rtm">Rem_Tran Mismatch:</label>
+    </div>
+    <div>
+    <input type="text" id="rem_tran_mis" placeholder="default:0">
+    </div>
+</div>
+<div class="line">
+    <div>
+    <label id="d_rs">RNAup_score:</label>
+    </div>
+    <div>
+    <input type="text" id="RNAup_score" placeholder="default:None">
+    </div>
+</div>
+<div class="line">
+    <div>
+    <label id="d_gts">GU_target_score:</label>
+    </div>
+    <div>
+    <input type="text" id="GU_target_score" placeholder="default:None">
+    </div>
+</div>
+<div class="line">
+    <div>
+    <label id="d_em">E-mail:</label>
+    </div>
+    <div>
+    <input type="text" id="mail">
+    </div>
+</div>
+<div>
+    <a href="#example"><button type="button" id="search">SUBMIT</button></a>
+</div>
+<div id="pbar">
+    <div id="myProgress" class="progress">
+          <div id="myBar" class="bar"></div>
+    </div>
+    <div id="Percentage" class="percentage"></div>
+</div>
+</div>
+<div class="right-opt">Flowchart(Hover to see detail)
+    <div id="flowchart"></div>
+</div>
+
+</div>
+    
+{% endblock %}  
+{% block jsfile %}
+<script src="{%static 'BROWSE/browse/js/usage.js'%}"></script>
+{% endblock %}
