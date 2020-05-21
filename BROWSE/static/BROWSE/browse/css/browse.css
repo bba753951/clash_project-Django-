@@ -4,7 +4,7 @@
     /*height: 100%;*/
 /*}*/
 
-.btn, button, input {
+.btn, button {
   border: 0;
   outline: 0;
   font-size: 16px;
@@ -14,18 +14,18 @@
   text-shadow: 1px 1px 0 #FFF;
 }
 
-input[type="text"] {
-  margin-right: 8px;
-  box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
-  width: 15%;
-  height: 16px;
-  transition: all 0.2s ease-in-out;
-  appearance: none;
-  -webkit-appearance: none;
-}
-input[type="text"]:focus {
-  box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-}
+/*input[type="text"] {*/
+  /*margin-right: 8px;*/
+  /*box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;*/
+  /*width: 15%;*/
+  /*height: 16px;*/
+  /*transition: all 0.2s ease-in-out;*/
+  /*appearance: none;*/
+  /*-webkit-appearance: none;*/
+/*}*/
+/*input[type="text"]:focus {*/
+  /*box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;*/
+/*}*/
 
 .ptitle {
   font-size: 20px;
@@ -257,4 +257,20 @@ button {
 }
 .info{
 	color:white;
+}
+
+
+.para{
+	width:30%;
+	margin:auto;
+}
+label{
+	display:flex;
+	overflow:hidden;
+}
+label>div:first-child{
+	flex:1 0 auto;
+}
+label>div:nth-child(2){
+	flex:0 0 auto;
 }

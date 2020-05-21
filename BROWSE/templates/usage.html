@@ -32,112 +32,271 @@
 {% block main %}
 <div class="outter">
 <div class="left-opt">
+    <p>PARAMETER</p>
+<div class="file-opt lshow">
     <a href="/master_project/master_media/usage_example.zip">(download example data)</a>
     <span>Adaptor: AGATCGGAAGAG</span>
-<div class="line">
-    <div>
-    <label id="d_uf">Upload File:</label>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_uf">Upload File:</label>
+        </div>
+        <div class="right_para">
+        <input type="file" name="zip_file">
+        </div>
     </div>
-    <div>
-    <input type="file" name="zip_file">
-    </div>
-</div>
-
-<div class="line">
-    <div>
-    <label id="d_as">Adaptor Sequence:</label>
-    </div>
-    <div>
-    <input type="text" id="adaptor" placeholder="e.g.,AGATCGGAAGAGC">
-    </div>
-</div>
-
-<div class="line">
-    <div>
-    <label id="d_hl">Hybrid Length:</label>
-    </div>
-    <div>
-    <input type="text" id="hyb_len" placeholder="default:17">
+    <div class="line">
+        <div class="left_para">
+        <label id="d_em">E-mail:</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="mail">
+        </div>
     </div>
 </div>
 
-<div class="line">
-    <div>
-    <label id="d_rc">Read Count:</label>
+<div class="preprocess-opt lshow">
+    <div class="line">
+        <div class="left_para">
+        <label id="d_as">Adaptor Sequence:</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="adaptor" placeholder="e.g.,AGATCGGAAGAGC">
+        </div>
     </div>
-    <div>
-    <input type="text" id="readCount" placeholder="defualt:0">
+
+    <div class="line">
+        <div class="left_para">
+        <label id="d_hl_g"> Hybrid Length &ge; </label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_len_g" placeholder="default:17">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_hl_l"> Hybrid Length &le; </label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_len_l" placeholder="default:70">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_ps"> Phred Score &le; </label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="phred_score" placeholder="default:30">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_tt">Trimmed Tool:</label>
+        </div>
+        <div class="select right_para">
+            <select id="trimmed_tool">
+                <option value="flexbar">flexbar</option>
+                <option value="fastx">fastx</option>
+                <option value="trim_galore">trim_galore</option>
+            </select>
+        </div>
     </div>
 </div>
 
-<div class="line">
-    <div>
-    <label id="d_rm">RNAfold_MFE:</label>
+<div class="quality-opt lshow">
+    <div class="line">
+        <div class="left_para">
+        <label id="d_rc">Read Count &ge;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="readCount" placeholder="defualt:5">
+        </div>
     </div>
-    <div>
-    <input type="text" id="RNAfold_MFE" placeholder="default:None">
-    </div>
-</div>
-<div class="line">
-    <div>
-    <label id="d_rhm">Reg_Hyb Mismatch:</label>
-    </div>
-    <div>
-    <input type="text" id="reg_hyb_mis" placeholder="default:0">
-    </div>
-</div>
-<div class="line">
-    <div>
-    <label id="d_rsl">Remaining Sequence Length:</label>
-    </div>
-    <div>
-    <input type="text" id="rem_len" placeholder="default:15">
+
+    <div class="line">
+        <div class="left_para">
+        <label id="d_rm">RNAfold_MFE &le; </label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="RNAfold_MFE" placeholder="default:None">
+        </div>
     </div>
 </div>
-<div class="line">
-    <div>
-    <label id="d_rtm">Rem_Tran Mismatch:</label>
+<div class="quality-opt lshow">
+<!-- <===================pir==============> -->
+     <p> WAY:PIR</p>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_atrm_p">Align to Regulator Mismatch &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="reg_mis" placeholder="default:0(max:2)">
+        </div>
     </div>
-    <div>
-    <input type="text" id="rem_tran_mis" placeholder="default:0">
+    <div class="line">
+        <div class="left_para">
+        <label id="d_attm_p">Align to Transcript Mismatch &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="tran_mis" placeholder="default:0(max:2)">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_rsl_p">Remaining Sequence Length &ge;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="rem_len" placeholder="default:17">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_hph_p">Hits per Hybrid &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_hit_p" placeholder="default:10">
+        </div>
+    </div>
+
+<!-- <===================hyb==============> -->
+
+     <p> WAY:HYB</p>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_hst_h">Hybrid Selection Threshold &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_thres_h" placeholder="default:0.1">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_obf_h">Overlap between Fragments &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_overlap_h" placeholder="default:4">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_hph_h">Hits per Hybrid &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_hit_h" placeholder="default:10">
+        </div>
+    </div>
+
+<!-- <===================clan==============> -->
+     <p> WAY:CLAN</p>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_fl_c">Fragments Length &ge;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="frag_len_c" placeholder="default:17">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_obf_c">Overlap between Fragments &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_overlap_c" placeholder="default:4">
+        </div>
+    </div>
+    <div class="line">
+        <div class="left_para">
+        <label id="d_hpf_c">Hits per Fragment &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="hyb_hit_c" placeholder="default:10">
+        </div>
     </div>
 </div>
-<div class="line">
-    <div>
-    <label id="d_rs">RNAup_score:</label>
+<div class="rnaup-opt lshow">
+    <div class="line">
+        <div class="left_para">
+        <label id="d_rs">RNAup_score &le;</label>
+        </div>
+        <div class="right_para">
+        <input type="text" id="RNAup_score" placeholder="default:None">
+        </div>
     </div>
+
     <div>
-    <input type="text" id="RNAup_score" placeholder="default:None">
+        <a href="#example"><button type="button" id="search">SUBMIT</button></a>
+    </div>
+    <div id="pbar">
+        <div id="myProgress" class="progress">
+            <div id="myBar" class="bar"></div>
+        </div>
+        <div id="Percentage" class="percentage"></div>
     </div>
 </div>
-<div class="line">
-    <div>
-    <label id="d_gts">GU_target_score:</label>
-    </div>
-    <div>
-    <input type="text" id="GU_target_score" placeholder="default:None">
-    </div>
 </div>
-<div class="line">
-    <div>
-    <label id="d_em">E-mail:</label>
+<div class="right-opt">FLOWCHART(Click step)
+    {% comment %}<div id="flowchart"></div>{% endcomment %}
+    <div id="flow_upload" class="divFlow rshow rclick">
+        Upload File
     </div>
-    <div>
-    <input type="text" id="mail">
+    <div id="arrow4" class="arrow">
+      <svg version="1.1" 
+          id="svg-arrow-down" 
+          width="100" height="50"
+          xmlns="http://www.w3.org/2000/svg" 
+          xmlns:xlink="http://www.w3.org/1999/xlink" 
+          viewBox="0 -7 22 35" 
+          xml:space="preserve">
+          <polygon class="arrow" style="fill:#000000;" points="20.58,11.584 12.004,20.158 12.004,0 9.996,0 9.996,20.158 1.42,11.584 0,13.004 11,24,22,13.004 "></polygon>
+        </svg>
     </div>
-</div>
-<div>
-    <a href="#example"><button type="button" id="search">SUBMIT</button></a>
-</div>
-<div id="pbar">
-    <div id="myProgress" class="progress">
-          <div id="myBar" class="bar"></div>
+
+    <div id="flow_preprocess" class="divFlow rshow">
+        Hybrid-Preprocess
     </div>
-    <div id="Percentage" class="percentage"></div>
-</div>
-</div>
-<div class="right-opt">Flowchart(Hover to see detail)
-    <div id="flowchart"></div>
+    <div id="arrow1" class="arrow">
+      <svg version="1.1" 
+          id="svg-arrow-down" 
+          width="100" height="50"
+          xmlns="http://www.w3.org/2000/svg" 
+          xmlns:xlink="http://www.w3.org/1999/xlink" 
+          viewBox="0 -7 22 35" 
+          xml:space="preserve">
+          <polygon class="arrow" style="fill:#000000;" points="20.58,11.584 12.004,20.158 12.004,0 9.996,0 9.996,20.158 1.42,11.584 0,13.004 11,24,22,13.004 "></polygon>
+        </svg>
+
+
+    </div>
+    <div id="flow_quality" class="divFlow rshow">
+        Hybrid-Quality
+    </div>
+    <div id="arrow2" class="arrow">
+      <svg version="1.1" 
+          id="svg-arrow-down" 
+          width="100" height="50"
+          xmlns="http://www.w3.org/2000/svg" 
+          xmlns:xlink="http://www.w3.org/1999/xlink" 
+          viewBox="0 -7 22 35" 
+          xml:space="preserve">
+          <polygon class="arrow" style="fill:#000000;" points="20.58,11.584 12.004,20.158 12.004,0 9.996,0 9.996,20.158 1.42,11.584 0,13.004 11,24,22,13.004 "></polygon>
+        </svg>
+    </div>
+    <div id="flow_pair" class="divFlow rshow">
+        Find Pairs
+    </div>
+    <div id="arrow3" class="arrow">
+      <svg version="1.1" 
+          id="svg-arrow-down" 
+          width="100" height="50"
+          xmlns="http://www.w3.org/2000/svg" 
+          xmlns:xlink="http://www.w3.org/1999/xlink" 
+          viewBox="0 -7 22 35" 
+          xml:space="preserve">
+          <polygon class="arrow" style="fill:#000000;" points="20.58,11.584 12.004,20.158 12.004,0 9.996,0 9.996,20.158 1.42,11.584 0,13.004 11,24,22,13.004 "></polygon>
+        </svg>
+    </div>
+    <div id="flow_rnaup" class="divFlow rshow">
+        RNAup Analyse
+    </div>
 </div>
 
 </div>

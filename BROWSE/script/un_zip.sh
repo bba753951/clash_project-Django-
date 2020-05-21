@@ -4,8 +4,8 @@ echo $file_path
 list=$(unzip -l $file)
 
 name1="hyb_file.fastq"
-name2="tran_file.csv"
-name3="reg_file.csv"
+name2="tran_file.fasta"
+name3="reg_file.fasta"
 name4="gene_file.csv"
 
 function checkfile(){

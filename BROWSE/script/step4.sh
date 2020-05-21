@@ -25,7 +25,7 @@ outfile=step4.csv
 function usage(){
 cat << -EOF-
 Usage: 
-    $0 -i <input> -o <output> -r <reference> -m <mismatch> -s <step3 output> -b <build>
+    $0 -i <input> -o <output> -r <reference> -m <mismatch> -b <build>
 Options:
     -h display this help and exit
 
@@ -196,5 +196,6 @@ RNA_remain_col=$?
 merge_csv $infile $remain_id_col $merge_RNA $RNA_remain_col $outfile
 
 
-rm ${temp_path}"/"${base_inp}".fasta" ${ref}".fasta" $merge_RNA
+rm ${temp_path}"/"${base_inp}".fasta" $merge_RNA
+#rm ${temp_path}"/"${base_inp}".fasta" ${ref}".fasta" $merge_RNA
 

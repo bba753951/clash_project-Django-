@@ -17,7 +17,7 @@ $('#example').DataTable({
                 if(data[1]+""==="0")
                     value = "show target site"
                 else
-                    value = '<a target="_blank" href="'+site_link+"?name="+data[0]+"&regulator="+regulator_name+"&userID="+userID+'&mtype=transcript&sfile=ori_reg">show target site</a>';
+                    value = '<a target="_blank" href="'+site_link+"?name="+data[0]+"&regulator="+regulator_name+"&userID="+userID+"&way="+way+'&mtype=transcript&sfile=ori_reg">show target site</a>';
                 return value
             }
         }

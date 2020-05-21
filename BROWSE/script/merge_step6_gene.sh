@@ -5,7 +5,8 @@ shell_folder=$(cd "$(dirname "$0")";pwd)
 . ${shell_folder}/filefunction.sh
 
 step6_path=$1
-step6_file=${step6_path}"step6_transcript_regulator.csv"
+way=$2
+step6_file=${step6_path}${way}"/step6_transcript_regulator.csv"
 gene_file=${step6_path}"gene_file.csv"
 
 
@@ -32,4 +33,4 @@ join -t, -a 2 -e 0 -o 1.${gene_col},2.1,2.2,2.3\
     > ${step6_path}"temp.csv"
 
 
-jq -s -R -c -f ${shell_folder}/csv2json.jq ${step6_path}"temp.csv" > ${step6_path}"step6_transcript_regulator.json"
+jq -s -R -c -f ${shell_folder}/csv2json.jq ${step6_path}"temp.csv" > ${step6_path}${way}"/step6_transcript_regulator.json"

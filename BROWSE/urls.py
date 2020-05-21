@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.browse, name='browse'),
     url(r'^upload_fun', views.uploadfile, name='upload_url'),
+    url(r'^downloadList', views.downloadList, name='downloadList_url'),
     url(r'^site_link', views.site_link, name='site_link'),
     url(r'^copy_example', views.copy_example, name='copy_example'),
     url(r'^usage', views.usage, name='usage'),

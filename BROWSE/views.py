@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from django.shortcuts import render_to_response
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse,JsonResponse,FileResponse
 from django.views.decorators.csrf import csrf_exempt
 
 import subprocess
@@ -10,9 +10,30 @@ import random,string
 import os
 
 server="cosbi7"
+media_path = '/home/bba753951/Django/master_project/media/uploadfile/'
+script_folder = '/home/bba753951/Django/master_project/BROWSE/script/'
+info_path = '/home/bba753951/Django/master_project/media/info/'
+
+def downloadList(request):        
+    folder_id=request.GET.get("id","")
+    way=request.GET.get("way","")
+    id_path=media_path+folder_id+"/"+way+"/"
+    command="zip -j {0}download.zip {0}step6*.csv".format(id_path)
+    subprocess.call(command, shell=True)
+    print(id_path+"download.zip")
+    response = FileResponse(open(id_path+"download.zip","rb"))
+    response["Content-Type"]="application/octet-stream"
+    response["Content-Disposition"]="attachment;filename=download.zip"
+    return response
+
+
+
+
 
 def browse(request):        
     folder_id=request.GET.get("id","")
+    RNAup_score=request.GET.get("up","")
+    RNAfold_MFE=request.GET.get("fold","")
     return render_to_response('browse.html',locals())
 
 def savefile(file1,name,id_path):
@@ -22,62 +43,34 @@ def savefile(file1,name,id_path):
         for temp in file1.chunks():
             f.write(temp)
 
+def getDefault(value,default):
+    if not value:
+        return default
+    return value
+
 @csrf_exempt
 def uploadfile(request):
+# for browse
     print(request)
-    media_path = '/home/bba753951/Django/master_project/media/uploadfile/'
-    script_folder = '/home/bba753951/Django/master_project/BROWSE/script/'
 
 
 
     print("upload---------------\n\n\n")
     if request.method == 'POST':
 
-        RNAfold_MFE = request.POST.get("RNAfold_MFE")
-        RNAup_score = request.POST.get("RNAup_score")
-        GU_target_score = request.POST.get("GU_target_score")
-        mtype = request.POST.get("mtype")
-        filetype = request.POST.get("filetype")
-
-        print(mtype)
-        print(filetype)
-
-        if filetype=="ID":
-            folder_id = request.POST.get("folder_id")
-            print("========folder_id:",folder_id)
-            id_path=media_path+folder_id+"/"
-            task_id=folder_id
-        else:
-            upload_file = request.FILES.get('upload_file')
-            task_id="".join(random.choice(string.ascii_letters+string.digits) for x in range(10))
-            id_path=media_path+task_id+"/"
-            print("task_id=======",task_id)
-            subprocess.call("mkdir "+id_path, shell=True)
-            savefile(upload_file,"upload.zip",id_path)
-            command1="bash {}un_zip2.sh {}upload.zip".format(script_folder,id_path)
-            subprocess.call(command1, shell=True)
-
-        # command2="zip {0}download.zip {0}original.csv {0}step6*.csv".format(id_path)
-        # print("command2:::",command2)
-        # subprocess.call(command2, shell=True)
-
-        if not RNAfold_MFE:
-            RNAfold_MFE="None"
-
-        if not RNAup_score:
-            RNAup_score="None"
-
-        if not GU_target_score:
-            GU_target_score="None"
-
-        if not os.path.isdir(id_path):
-            raise KeyError
+        RNAfold_MFE = getDefault(request.POST.get("RNAfold_MFE","None"),"None")
+        RNAup_score = getDefault(request.POST.get("RNAup_score","None"),"None")
+        way = getDefault(request.POST.get("way","pir"),"pir")
+        mtype = getDefault(request.POST.get("browse","regulator"),"regulator")
+        folder_id = request.POST.get("folder_id")
+        id_path=media_path+folder_id+"/"
+        task_id=folder_id
 
         print("------------------------")
-        command="bash {4}step6.sh -i {0}original.csv -o {0}step6.csv -t {0}transcript.csv -r {0}regulator.csv -p {1} -u {2} -f {3}".format(id_path,GU_target_score,RNAup_score,RNAfold_MFE,script_folder)
+        command="bash {4}step6.sh -i {0}{1}/hyb_file_step5.csv -o {0}{1}/step6.csv -t {0}transcript.csv -r {0}regulator.csv -u {2} -f {3}".format(id_path,way,RNAup_score,RNAfold_MFE,script_folder)
         print(command)
         subprocess.call(command, shell=True)
-        subprocess.call("bash {}merge_step6_gene.sh {}".format(script_folder,id_path), shell=True)
+        subprocess.call("bash {}merge_step6_gene.sh {} {}".format(script_folder,id_path,way), shell=True)
 
 
 
@@ -141,26 +134,23 @@ def showSeq(seq1,seq2):
     result="5'"+seq1+"3'<br>3'"+result_seq2+"5'"
     return result
 
-def search1(outfile,userID):
-    media_path = '/home/bba753951/Django/master_project/media/uploadfile/'+userID+"/"
-    data = pd.read_csv(media_path+outfile)
+def search1(outfile,userID,way):
+    file_path=media_path+userID+"/"+way+"/"
+    data = pd.read_csv(file_path+outfile)
 
 
     data["RNAup_target_seq"]=data.apply(lambda x :showSeq(x["RNAup_target_seq"],x["RNAup_input_seq"]),axis=1)
 
 
     hybrid_info=["hybrid_seq","hybrid_len","reg_hyb_target_pos","remain_pos"]
-    show_info=["hybrid0","read_count","RNAfold_MFE","regulator_name","regulator_seq","regulator_len","rem_tran_target_pos","RNAup_pos","RNAup_score","RNAup_target_seq"]
+    show_info=["hybrid0","read_count","RNAfold_MFE","regulator_name","regulator_seq","regulator_len","on_reg_pos","rem_tran_target_pos","RNAup_pos","RNAup_score","RNAup_target_seq"]
     tran_info=["transcript_name","transcript_len"]
-    GU_info=["GU_target_position","xGU_inseed","GU_inseed","xGU_outseed","GU_outseed","total_mismatch","xGU_misPos","GU_misPos"]
-    gu_exist=0
 
     data=data.fillna("")
 
     tdata=[]
     tcolumn=[]
     h_info=[hybrid_info]
-    g_info=[GU_info]
     pre_pos_array=[]
     pos_array=[]
 
@@ -171,11 +161,6 @@ def search1(outfile,userID):
     transcript_len=int(data.loc[0,"transcript_len"])
     transcript_info=[tran_info,list(data.loc[0,tran_info])]
 
-    if "GU_targeting_score" in data.columns:
-        gu_exist=1
-        show_info.append("GU_targeting_score")
-        for i in data.index:
-            g_info.append(list(data.loc[i,GU_info]))
 
     for i in data.index:
         show_list=list(data.loc[i,show_info])
@@ -233,8 +218,6 @@ def search1(outfile,userID):
     result["data"]=tdata
     result["col_num"]=data.shape[0]
     result["hybrid_info"]=h_info
-    result["gu_info"]=g_info
-    result["gu_exist"]=gu_exist
     result["transcript_len"]=transcript_len
     result["transcript_info"]=transcript_info
     result["pos_info"]=pos_info
@@ -243,13 +226,13 @@ def search1(outfile,userID):
     return result
 
 
-def search2(name,userID):
-    media_path = '/home/bba753951/Django/master_project/media/uploadfile/'+userID+"/"
+def search2(name,userID,way):
+    file_path=media_path+userID+"/"+way+"/"
     outfile="ori_reg.csv"
-    command='bash /home/bba753951/Django/master_project/BROWSE/script/search_name.sh "{}" original.csv {} {}'.format(name,outfile,userID)
+    command='bash {}search_name.sh "{}" {} step6.csv {}'.format(script_folder,name,file_path,outfile)
     subprocess.call(command,shell=True)
 
-    data = pd.read_csv(media_path+outfile,usecols=["transcript_name"])
+    data = pd.read_csv(file_path+outfile,usecols=["transcript_name"])
     groups = data.groupby(data["transcript_name"])
 
     table=[]
@@ -272,28 +255,28 @@ def site_link(request):
     mtype=request.GET.get("mtype")
     reg_name=request.GET.get("regulator")
     userID=request.GET.get("userID")
-    search_file=request.GET.get("sfile")+".csv"
+    way=request.GET.get("way","pir")
+    search_file=request.GET.get("sfile","step6")+".csv"
     tTitle=""
-    
-    if not userID:
-        userID="example"
+    file_path=media_path+userID+"/"+way+"/"
 
     print(mtype)
     if mtype=="transcript":
         outfile="table.csv"
-        command='bash /home/bba753951/Django/master_project/BROWSE/script/search_name.sh "{}" {} {} {}'.format(name,search_file,outfile,userID)
+        command='bash {}search_name.sh "{}" {} {} {}'.format(script_folder,name,file_path,search_file,outfile)
         subprocess.call(command,shell=True)
-        result=search1(outfile,userID)
+        result=search1(outfile,userID,way)
     elif mtype=="regulator":
         print("----------------------")
         print(name)
-        result=search2(name,userID)
+        result=search2(name,userID,way)
+        tTitle="Browse Regulator({}) Detail(Way:{})".format(name,way)
         return render_to_response('reg_tran.html',locals())
 
     if reg_name:
-        tTitle="Browse Regulator({}) on Transcript({}) Detail".format(reg_name,name)
+        tTitle="Browse Regulator({}) on Transcript({}) Detail(Way:{})".format(reg_name,name,way)
     else:
-        tTitle="Browse Transcript({}) Detail".format(name)
+        tTitle="Browse Transcript({}) Detail(Way:{})".format(name,way)
 
     return render_to_response('site_table.html',locals())
 
@@ -305,9 +288,7 @@ def usage(request):
 
 @csrf_exempt
 def usage_upload(request):
-    media_path = '/home/bba753951/Django/master_project/media/uploadfile/'
-    info_path = '/home/bba753951/Django/master_project/media/info/'
-    script_folder = '/home/bba753951/Django/master_project/BROWSE/script/'
+    suite_bin = "/home/bba753951/suite/bin/"
 
     task_id="".join(random.choice(string.ascii_letters+string.digits) for x in range(10))
     id_path=media_path+task_id+"/"
@@ -317,89 +298,107 @@ def usage_upload(request):
 
     print("upload---------------\n\n\n")
     if request.method == 'POST':
+        # upload file
         hyb_file = request.FILES.get('zip_file')
-        # tran_file = request.FILES.get('transcript_file')
-        # reg_file = request.FILES.get('regulator_file')
-        # gene_file = request.FILES.get('gene_file')
-
-
-        RNAfold_MFE = request.POST.get("RNAfold_MFE","None")
-        RNAup_score = request.POST.get("RNAup_score","None")
-        GU_target_score = request.POST.get("GU_target_score","None")
-
-        hyb_len = request.POST.get("hyb_len",17)
-        rem_len = request.POST.get("rem_len",15)
-
         mail = request.POST.get("mail")
 
-        readCount = request.POST.get("readCount",5)
-        adaptor = request.POST.get("adaptor","None")
+        # preporcess
+        adaptor = getDefault(request.POST.get("adaptor","None"),"None")
+        hyb_len_g = getDefault(request.POST.get("hyb_len_g",17),17)
+        hyb_len_l = getDefault(request.POST.get("hyb_len_l",70),70)
+        phred_score = getDefault(request.POST.get("phred_score",30),30)
+        trimmed_tool = getDefault(request.POST.get("trimmed_tool","flexbar"),"flexbar")
 
-        reg_hyb_mis = request.POST.get("reg_hyb_mis",0)
-        rem_tran_mis = request.POST.get("rem_tran_mis",0)
+        # quality
+        readCount = getDefault(request.POST.get("readCount",5),5)
+        RNAfold_MFE = getDefault(request.POST.get("RNAfold_MFE","None"),"None")
+
+        # find pairs 
+        ## pir
+        reg_mis = getDefault(request.POST.get("reg_mis",0),0)
+        tran_mis = getDefault(request.POST.get("tran_mis",0),0)
+        rem_len = getDefault(request.POST.get("rem_len",17),17)
+        hyb_hit_p = getDefault(request.POST.get("hyb_hit_p",10),10)
+        ## hyb
+        hyb_thres_h = getDefault(request.POST.get("hyb_thres_h",0.1),0.1)
+        hyb_overlap_h = getDefault(request.POST.get("hyb_overlap_h",4),4)
+        hyb_hit_h = getDefault(request.POST.get("hyb_hit_h",10),10)
+        ## clan
+        frag_len_c = getDefault(request.POST.get("frag_len_c",17),17)
+        hyb_overlap_c = getDefault(request.POST.get("hyb_overlap_c",4),4)
+        hyb_hit_c = getDefault(request.POST.get("hyb_hit_c",10),10)
+
+        # analyse
+        RNAup_score = getDefault(request.POST.get("RNAup_score","None"),"None")
+
+
 
         subprocess.call("mkdir "+id_path, shell=True)
         print("mkdir")
-        # savefile(tran_file,"tran_file_file.csv",id_path)
-        # print("save1")
-        # savefile(reg_file,"reg_file.csv",id_path)
-        # print("save2")
         savefile(hyb_file,"upload.zip",id_path)
         print("save3")
-        if not adaptor:
-            adaptor="None"
-
-        if not RNAfold_MFE:
-            RNAfold_MFE="None"
-
-        if not RNAup_score:
-            RNAup_score="None"
-
-        if not GU_target_score:
-            GU_target_score="None"
-
-        if not reg_hyb_mis:
-            reg_hyb_mis=0
-
-        if not rem_tran_mis:
-            rem_tran_mis=0
-
-        if not readCount:
-            readCount="None"
-
-        if not rem_len:
-            rem_len=15
-
-        if not hyb_len:
-            hyb_len=17
 
 
-        command="bash {}changeState.sh {} {} {}".format(script_folder,task_id,1,2) 
-        command1="bash {}un_zip.sh {}upload.zip".format(script_folder,id_path)
-        command2='bash {0}pipeline -f {1}hyb_file.fastq -t {1}tran_file.csv -r {1}reg_file.csv -g {1}gene_file.csv -a {2} -o {1}output.csv -l {3} -C {4} -F {5} -U {6} -G {7} -L {8} -m {9} -M {10} -b 1 -B 1 -p 1'.format(script_folder,id_path,adaptor,hyb_len,readCount,RNAfold_MFE,RNAup_score,GU_target_score,rem_len,reg_hyb_mis,rem_tran_mis)
+        command=". {}env_path.sh".format(script_folder)
+        command1="bash {}changeState.sh {} {} {}".format(script_folder,task_id,1,2) 
+        command2="bash {}un_zip.sh {}upload.zip".format(script_folder,id_path)
+        run1="cd {}".format(id_path)
+        run2="make -f {}makefile preprocess qc={} trim={} link={} len={} slen={} rc={} fd={} in=hyb_file.fastq".format(suite_bin,trimmed_tool,phred_score,adaptor,hyb_len_g,hyb_len_l,readCount,RNAfold_MFE)
+        run3="make -f {}makefile build reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin)
+        run4="mkdir pir hyb clan"
+        ## pir   
+        run5="make -f {}makefile detect way=pir llen={} reg_mis={} tran_mis={} hmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,rem_len,reg_mis,tran_mis,hyb_hit_p)
+        run5_1="make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,RNAup_score)
+        run5_2="mv hyb_file_step5.csv pir/"
+        run5_3="rm hyb_file_step4.csv"
+        ## hyb   
+        run6="make -f {}makefile detect way=hyb hval={} hmax={} gmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,hyb_thres_h,hyb_hit_h,hyb_overlap_h)
+        run6_1="make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,RNAup_score)
+        run6_2="mv hyb_file_step5.csv hyb/"
+        run6_3="rm hyb_file_step4.csv"
+        ## clan   
+        run7="make -f {}makefile detect way=clan llen={} hmax={} gmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,frag_len_c,hyb_hit_c,hyb_overlap_c)
+        run7_1="make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,RNAup_score)
+        run7_2="mv hyb_file_step5.csv clan/"
+        run7_3="rm hyb_file_step4.csv"
+
         command3="bash {}changeState.sh {} {} {}".format(script_folder,task_id,2,3) 
-        command4='echo "Your analysis is completed,and your file ID is {0}.\n Or you can click this link to see result http://{2}.ee.ncku.edu.tw/master_project/browse?id={0}" | mail -s "Analysis completed from {2}" -a "From: CosbiLab <bba753951@{2}.ee.ncku.edu.tw>" {1}'.format(task_id,mail,server)
+        command4='echo "Your analysis is completed,and your file ID is {0}.\n Or you can click this link to see result http://{2}.ee.ncku.edu.tw/master_project/browse?id={0}&up={3}&fold={4}" | mail -s "Analysis completed from {2}" -a "From: CosbiLab <bba753951@{2}.ee.ncku.edu.tw>" {1}'.format(task_id,mail,server,RNAup_score,RNAfold_MFE)
         command5="bash {}schedule.sh".format(script_folder) 
 
-        print(command2)
         with open(id_path+"run.sh","w") as fp:
-            fp.write(command+"\n")
-            fp.write(command1+"\n")
-            fp.write(command2+"\n")
-            fp.write(command3+"\n")
-            fp.write(command4+"\n")
-            fp.write(command5+"\n")
+            fp.write(command+"\n\n")
+            fp.write(command1+"\n\n")
+            fp.write(command2+"\n\n")
+            fp.write(run1+"\n\n")
+            fp.write(run2+"\n\n")
+            fp.write(run3+"\n\n")
+            fp.write(run4+"\n\n")
+            fp.write(run5+"\n\n")
+            fp.write(run5_1+"\n\n")
+            fp.write(run5_2+"\n\n")
+            fp.write(run5_3+"\n\n")
+            fp.write(run6+"\n\n")
+            fp.write(run6_1+"\n\n")
+            fp.write(run6_2+"\n\n")
+            fp.write(run6_3+"\n\n")
+            fp.write(run7+"\n\n")
+            fp.write(run7_1+"\n\n")
+            fp.write(run7_2+"\n\n")
+            fp.write(run7_3+"\n\n")
+            fp.write(command3+"\n\n")
+            fp.write(command4+"\n\n")
+            fp.write(command5+"\n\n")
 
         with open(info_path+"info.csv","a+") as fp:
             fp.write(task_id+","+mail+",0\n")
 
 
-        infoTxt="<span class='info'>Adaptor Sequence: {}<br><br>Hybrid Length (greater equeal): {} <br><br> Read count (greater equal): {} <br><br> RNAfold_MFE (less equal): {}<br><br>Reg_Hyb Mismatch: {}<br><br>Remaining Sequence Length (greater equal): {} <br><br> Rem_Tran Mismatch: {}<br><br> RNAup_score(less equal): {} <br><br>GU_target_score (greater equal): {}</span>".format(adaptor,hyb_len,readCount,RNAfold_MFE,reg_hyb_mis,rem_len,rem_tran_mis,RNAup_score,GU_target_score)
+        infoTxt="<span class='info'>Adaptor Sequence: {}<br><br> Hybrid Length &le;{} <br><br> Hybrid Length &ge;{} <br><br> Phred Score &le;{} <br><br> Trimmed Tool:{} <br><br> Read Count &ge;{} <br><br> RNAfold_MFE &le; {}<br><br>Way:PIR <br><br>Align to Regulator Mismatch &le; {}<br><br>Align to Transcript Mismatch &le; {} <br><br>Remaining Sequence Length &ge;{} <br><br> Hits per Hybrid &le; {}<br><br>Way:HYB<br><br>Hybrid Selection Threshold &le;{} <br><br>Overlap between Fragments &le;{} <br><br>Hits per Hybrid &le;{}<br><br>Way:CLAN<br><br>Fragments Length &ge;{}<br><br>Overlap between Fragments &le;{}<br><br>Hits per Fragment &le;{} <br><br> RNAup_score &le; {} <br></span>".format(adaptor,hyb_len_g,hyb_len_l,phred_score,trimmed_tool,readCount,RNAfold_MFE,reg_mis,tran_mis,rem_len,hyb_hit_p,hyb_thres_h,hyb_overlap_h,hyb_hit_h,frag_len_c,hyb_overlap_c,hyb_hit_c,RNAup_score)
         with open(id_path+"info_para.txt","w") as fp:
             fp.write(infoTxt)
             
         confirm_command='echo "if you want to start your analysis,please click this link http://{2}.ee.ncku.edu.tw/master_project/browse/confirmMail?id={0}" | mail -s "Confirm mail from {2}" -a "From: CosbiLab <bba753951@{2}.ee.ncku.edu.tw>" {1}'.format(task_id,mail,server)
-        print(confirm_command)
         subprocess.call(confirm_command, shell=True)
 
     return JsonResponse({"data":"ok","userID":task_id})
@@ -408,14 +407,14 @@ def usage_upload(request):
 # when user confirm mail,change info.csv from 0 to 1
 def confirmMail(request):
     folder_id=request.GET.get("id")
-    info_path = '/home/bba753951/Django/master_project/media/info/'
     print("========confirm===========")
 
     data=pd.read_csv(info_path+"info.csv",header=None,index_col=0)
-    data.loc[folder_id,2]=1
-    data.to_csv(info_path+"info.csv",header=0)
-    command="bash /home/bba753951/Django/master_project/BROWSE/script/schedule.sh"
-    subprocess.call(command, shell=True)
+    if data.loc[folder_id,2] == 0:
+        data.loc[folder_id,2]=1
+        data.to_csv(info_path+"info.csv",header=0)
+        command="bash {}schedule.sh".format(script_folder)
+        subprocess.call(command, shell=True)
     return render_to_response('confirm.html',locals())
 
 

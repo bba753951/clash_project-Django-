@@ -188,18 +188,6 @@ $('#example').DataTable({
             }
         },
         { "bVisible": false, "aTargets": [0]},
-        {
-            "aTargets":[-1],
-            "mData": function ( source, type, val  ) {return source},
-            "mRender" : function(data,type,full){
-                var value;
-                if(gu_exist){
-                    value = '<button type="button" class="gu_btn" id="gu'+data[0]+'">'+data[data.length-1]+'</button>';
-                }else
-                    value = data[data.length-1]
-                return value
-            }
-        },
     ]
 });
 
@@ -208,9 +196,6 @@ function renderTip(){
 
     for(i = 0;i < tcol_num;i++){
         addClickTip(hybrid_info,"hybrid",i,'top left','bottom right')
-        if(gu_exist){
-            addClickTip(gu_info,"gu",i,'top right','bottom left')
-        }
     }
 }
 renderTip();

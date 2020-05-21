@@ -206,6 +206,7 @@ target_pos=$?
 
 awk -v ref_seq=$ref_seq -v ref_len=$ref_len -v len=$sRemainLen -v target_pos=$target_pos -f ${shell_folder}/remain.awk $merge_hyb > $outfile
 
-rm $merge_reg $merge_hyb $inp".fasta" $ref".fasta"
+#rm $merge_reg $merge_hyb $inp".fasta" $ref".fasta"
+rm $merge_reg $merge_hyb $ref".fasta"
 
 

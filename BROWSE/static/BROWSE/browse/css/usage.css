@@ -43,10 +43,18 @@
 	display:none;
 }
 .line>div{
-	flex: 1 0 auto;
 	overflow:hidden;
-	width:20%;
 }
+.left_para{
+	flex:1 0 auto;
+}
+.right_para{
+	flex:0 0 auto;
+	width:30%;
+}
+
+
+
 .outter{
 	display: flex;
 	flex-direction: row;
@@ -73,4 +81,27 @@
 
 .flow_hover{
 	background-color:yellow;
+}
+
+
+.divFlow{
+	background-color:red;
+	height:60px;
+	width:150px;
+	margin:auto;
+	color: white;
+	border-radius: 10px;
+	line-height:60px;
+}
+
+.lshow{
+	display:none;
+}
+
+.rshow{
+	cursor:pointer;
+}
+
+.rclick{
+	opacity:0.5;
 }

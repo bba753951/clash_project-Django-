@@ -11,7 +11,7 @@ if [ "$line_num" == "" ];then
     exit 1
 fi
 
-sed -i "$line_num s/${old_state}$/${new_state}/" ${info_path}${info_file}
+sed -i "$line_num s/,${old_state}$/,${new_state}/" ${info_path}${info_file}
 
 echo ==============change state==================
 echo $id from $old_state to $new_state
