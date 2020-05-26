@@ -40,6 +40,37 @@ function infoHover(userID){
 
 }
 
+function addHoverTip(name,info_table){
+
+    $(name).qtip({
+        content: {
+            text:info_table,
+        },
+        show: {
+            effect: function(offset) {
+                $(this).slideDown(100); 
+            }},
+        hide: {
+            fixed:true,
+            },
+		position: {
+			//target: $('#show_site'),
+            my:'bottom right',
+            at:'top center'
+		},
+        style: {
+              classes: 'qtip-dark'
+              //classes: 'qtip-dark qtip-jtools'
+        }
+    })  
+    $(name).hover(function(){
+        $(this).css("opacity",0.2)
+    },function(){
+        $(this).css("opacity",1)
+    });
+}
+
+
 function uploadfile() {
 
     $("#search").addClass( "load");
@@ -144,4 +175,12 @@ if(RNAup_score != ""){
 if(RNAfold_MFE != ""){
     $('#RNAfold_MFE').val(RNAfold_MFE);
 }
+
+
+// add Hover Info
+var d_rs="<span class='info'>MFE of Regulator-Target Site (calculated by RNAup)</span>";
+var d_rm="<span class='info'>MFE of hybrid (calculated by RNAfold)</span>";
+addHoverTip("#d_rs",d_rs);
+addHoverTip("#d_rm",d_rm);
+
 

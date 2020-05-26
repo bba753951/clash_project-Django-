@@ -39,7 +39,7 @@
 {% block main %}
 <div class="select_container">
     <div class="file_id">
-        <div class="ptitle"><b>File ID:</b></div>
+        <div class="ptitle"><b>Job ID:</b></div>
         <div class="para">
           <label>
             <input type="text" id="folder_id">
@@ -49,11 +49,11 @@
 
     <div class="select_way">
 
-        <div class="ptitle"><b>Select Way:</b></div>
+        <div class="ptitle"><b>Select CLASH Analysis Algorithm</b></div>
         <div class="select para">
             <select id="way">
-                <option value="pir">PIR</option>
-                <option value="hyb">HYB</option>
+                <option value="pir">piRTarBase</option>
+                <option value="hyb">Hyb</option>
                 <option value="clan">CLAN</option>
             </select>
 
@@ -61,11 +61,11 @@
     </div>
     <div class="select_type">
 
-        <div class="ptitle"><b>Select Browse Type:</b></div>
+        <div class="ptitle"><b>Browse By</b></div>
         <div class="select para">
             <select id="browse">
-                <option value="regulator">Regulator</option>
-                <option value="transcript">Transcript</option>
+                <option value="regulator">Regulator Name</option>
+                <option value="transcript">Target RNA Name</option>
             </select>
 
         </div>
@@ -76,10 +76,10 @@
 
     <div class="select_score">
 
-        <div class="ptitle"><b>Select Score:</b></div>
+        <div class="ptitle"><b>Only View Answers Satisfying</b></div>
         <div class="para">
           <label>
-              <div>
+              <div id="d_rs">
                 RNAup_score &le;
               </div>
               <div>
@@ -89,7 +89,7 @@
         </div>
         <div class="para">
           <label>
-              <div>
+              <div id="d_rm">
                 RNAfold_MFE &le;
               </div>
               <div>

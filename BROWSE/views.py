@@ -137,6 +137,8 @@ def showSeq(seq1,seq2):
 def search1(outfile,userID,way):
     file_path=media_path+userID+"/"+way+"/"
     data = pd.read_csv(file_path+outfile)
+    print(data.head())
+    print(data.columns)
 
 
     data["RNAup_target_seq"]=data.apply(lambda x :showSeq(x["RNAup_target_seq"],x["RNAup_input_seq"]),axis=1)
@@ -228,18 +230,34 @@ def search1(outfile,userID,way):
 
 def search2(name,userID,way):
     file_path=media_path+userID+"/"+way+"/"
+    gene_file=media_path+userID+"/gene_file.csv"
     outfile="ori_reg.csv"
     command='bash {}search_name.sh "{}" {} step6.csv {}'.format(script_folder,name,file_path,outfile)
     subprocess.call(command,shell=True)
 
-    data = pd.read_csv(file_path+outfile,usecols=["transcript_name"])
-    groups = data.groupby(data["transcript_name"])
 
     table=[]
-    for name,group in groups:
-        table.append([name,len(group),0])
+    if os.path.exists(gene_file): 
+        gene_exist=1
+        command='bash {}reg_merge_gene.sh {} {} {}'.format(script_folder,file_path+outfile,gene_file,file_path+"merge_gene.csv")
+        subprocess.call(command,shell=True)
+        print(command)
 
-    return table
+        data = pd.read_csv(file_path+"merge_gene.csv")
+        groups = data.groupby(data["transcript_name"])
+
+        for name,group in groups:
+            table.append([group.iloc[0,0],name,len(group),0])
+    else:
+        gene_exist=0
+
+        data = pd.read_csv(file_path+outfile,usecols=["transcript_name"])
+        groups = data.groupby(data["transcript_name"])
+
+        for name,group in groups:
+            table.append([name,len(group),0])
+
+    return table,gene_exist
 
 def copy_example(request):
     media_path = '/home/bba753951/Django/master_project/media/uploadfile/example'
@@ -262,14 +280,16 @@ def site_link(request):
 
     print(mtype)
     if mtype=="transcript":
+        print("======search1:",search_file)
         outfile="table.csv"
         command='bash {}search_name.sh "{}" {} {} {}'.format(script_folder,name,file_path,search_file,outfile)
+        print("======search1:",command)
         subprocess.call(command,shell=True)
         result=search1(outfile,userID,way)
     elif mtype=="regulator":
         print("----------------------")
         print(name)
-        result=search2(name,userID,way)
+        result,gene_exist=search2(name,userID,way)
         tTitle="Browse Regulator({}) Detail(Way:{})".format(name,way)
         return render_to_response('reg_tran.html',locals())
 
@@ -407,7 +427,7 @@ def usage_upload(request):
 # when user confirm mail,change info.csv from 0 to 1
 def confirmMail(request):
     folder_id=request.GET.get("id")
-    print("========confirm===========")
+    print("========confirm===========",folder_id)
 
     data=pd.read_csv(info_path+"info.csv",header=None,index_col=0)
     if data.loc[folder_id,2] == 0:
