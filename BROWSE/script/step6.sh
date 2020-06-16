@@ -21,6 +21,7 @@ piScore=None
 upScore=None
 foldScore=None
 outfile=step6.csv
+readCount=None
 
 
 # -h option
@@ -62,6 +63,8 @@ Options:
     -f select "RNAfold_MFE" (less equal)
        default None
 
+    -c select "read_count" (greater equal)
+       default None
 
 -EOF-
 exit 1
@@ -69,7 +72,7 @@ exit 1
 
 
 # ---------------------------------------
-while getopts ":i:o:t:r:p:f:u:h" opt
+while getopts ":i:o:t:r:p:f:u:c:h" opt
 do
 	case $opt in
 		h)
@@ -96,6 +99,9 @@ do
             ;;
         u)
             upScore=$OPTARG
+            ;;
+        c)
+            readCount=$OPTARG
             ;;
 		*)
 			echo -e "$0: invalid option -- 'x'\nTry '$0 -h' for more information."
@@ -155,6 +161,11 @@ else
     upScore=1000
 fi
 
+if [ "$readCount" != "None" ];then
+    echo "choose readCount >= $readCount"
+else 
+    readCount=0
+fi
 
 
 
@@ -168,6 +179,9 @@ find_col RNAfold_MFE $infile
 fold_col=$?
 find_col RNAup_score $infile
 up_col=$?
+find_col read_count $infile
+readcount_col=$?
+
 
 find_col transcript_name $tranfile
 tran_col=$?
@@ -179,9 +193,9 @@ base_inp=$(basename ${infile%.*})
 out=${outfile%.*}
 
 if [ $p_col -eq -1 ];then
-    awk -F, -v upScore=$upScore -v foldScore=$foldScore -v fold_col=$fold_col -v up_col=$up_col '($up_col <= upScore && $fold_col <= foldScore)||NR==1 {$1=$1;print $0}' OFS="," $infile > $outfile
+    awk -F, -v readCount=$readCount -v readcount_col=$readcount_col -v upScore=$upScore -v foldScore=$foldScore -v fold_col=$fold_col -v up_col=$up_col '($up_col <= upScore && $fold_col <= foldScore && $readcount_col >= readCount)||NR==1 {$1=$1;print $0}' OFS="," $infile > $outfile
 else
-    awk -F, -v piScore=$piScore -v upScore=$upScore -v foldScore=$foldScore -v fold_col=$fold_col -v up_col=$up_col -v p_col=$p_col '($p_col >= piScore && $up_col <= upScore && $fold_col <= foldScore)||NR==1 {$1=$1;print $0}' OFS="," $infile > $outfile
+    awk -F, -v readCount=$readCount -v readcount_col=$readcount_col -v piScore=$piScore -v upScore=$upScore -v foldScore=$foldScore -v fold_col=$fold_col -v up_col=$up_col -v p_col=$p_col '($p_col >= piScore && $up_col <= upScore && $fold_col <= foldScore && $readcount_col >= readCount)||NR==1 {$1=$1;print $0}' OFS="," $infile > $outfile
 fi
 
 

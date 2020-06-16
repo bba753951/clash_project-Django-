@@ -13,7 +13,7 @@
 
 body, html {
   background-color: #EBECF0;
-  font-size: 15px;
+  font-size: 1vmin;
   height:100%;
 }
 body {
@@ -24,7 +24,7 @@ body {
 body, p, input, select, textarea, button {
   font-family: 'Montserrat', sans-serif;
   letter-spacing: -0.2px;
-  font-size: 16px;
+  font-size: 1vmin;
 }
 input{
 	width:100%;
@@ -35,18 +35,19 @@ input{
   /*text-shadow: 1px 1px 1px #FFF;*/
  /*} */
 
-nav li a, button, h1,.head2{
+nav li a, button, h1,h2,h3,.head2{
   text-transform: uppercase;
 }
 
+h1{
+	font-size:6vmin;
+}
 a {
   text-decoration: none;
   background-color: transparent;
 }
 
 .head2 {
-  font-size: 300%;
-  /* line-height: 40px; */
   margin-left: 30px;
   display: block;
   float: left;
@@ -89,7 +90,7 @@ nav ul li a {
   color: #000;
   margin-left: 90px;
   padding-bottom: 4px;
-  font-size: 150%;
+  font-size: 3vmin;
   border-bottom: 2px solid transparent;
   transition: border-bottom .2s;
 
@@ -109,8 +110,8 @@ header {
 
 .border {
   text-align:center;
-  width: 70%;
-  margin: 8% auto;
+  width: 75%;
+  margin: 5% auto;
   padding: 30px 10px;
   border-radius: 16px;
   background: #ecf0f3;
@@ -145,8 +146,9 @@ label{
   outline: 0;
   box-shadow: none;
   border: 0 !important;
-  background: #2c3e50;
   background-image: none;
+  background-color: #e5e5e5;
+	color:#5276f6;
 }
 /* Remove IE arrow */
 .select select::-ms-expand {
@@ -156,18 +158,18 @@ label{
 .select {
   position: relative;
   display: flex;
-  /* width: 20em; */
-  /* height: 3em; */
-  /* line-height: 3; */
-  background: #2c3e50;
   overflow: hidden;
-  border-radius: .25em;
-  margin:auto;
+  border-radius: 20px;
+	box-shadow: 3px 5px 5px #696b78;
+	background-color:#e5e5e5;
+	color: #e5e5e5;
+	padding:1px;
+  font-size: 1vmin;
+  line-height:1.5;
 }
 .select select {
   flex: 1;
   padding: 0 .5em;
-  color: #fff;
   cursor: pointer;
 }
 /* Arrow */
@@ -177,7 +179,7 @@ label{
   top: 0;
   right: 0;
   padding: 0 1em;
-  background: #34495e;
+  background-color:#5276f6;
   cursor: pointer;
   pointer-events: none;
   -webkit-transition: .25s all ease;
@@ -187,6 +189,99 @@ label{
 /* Transition */
 .select:hover::after {
   color: #f39c12;
+  opacity:0.5;
 }
 
+
+.reg_text{
+	color:red;
+}
+.tran_text{
+	color:blue;
+}
+
+
+/* ---------- button ----------------- */
+
+.btn, button {
+  border: 0;
+  outline: 0;
+  font-size: 1vmin;
+  border-radius: 20px;
+  padding: 10px;
+  background-color: #e5e5e5;
+  text-shadow: 1px 1px 0 #FFF;
+}
+
+
+.btn, button {
+  font-weight: bold;
+  color: #61677C;
+  box-shadow: -5px -5px 20px #FFF, 5px 5px 10px #696b78;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.btn:hover, button:hover ,.select:hover{
+  box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+}
+.btn:active, button:active,.select:hover {
+  box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+}
+
+button {
+  margin: 16px;
+  color: #c51c20;
+}
+
+
+.stress{
+  color:#fff701;
+}
+.stress_red{
+  color:#f00a0a;
+}
+
+
+/*---------------input text --------- */
+input[type="text"] {
+  box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus {
+  box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+}
+
+input[type="text"]{
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+  border-radius: 20px;
+  padding: 5px;
+  background-color: #EBECF0;
+  text-shadow: 1px 1px 0 #FFF;
+}
+
+
+
+/*--------------- qtip --------------*/
+.info{
+	color:white;
+    font-size: 16px;　　　　　         
+    line-height: 150% !important;　　　          　
+    /*letter-spacing: 3px;*/
+	padding:10px;
+}
+.qtip-content{
+    line-height: 150% !important;　　　          　
+
+}
+
+.info ol{
+	list-style-position: inside;
+}
+.info li{
+	padding:5px;
+}
 

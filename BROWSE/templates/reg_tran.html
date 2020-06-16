@@ -28,7 +28,7 @@
 {% block title %}Site Table{% endblock %}
 
 {% block main %}
-<p class="tTitle">{{ tTitle }}</p>
+<p class="tTitle">{{ tTitle |safe }}</p>
   <table id="example" class="display" style="width:100%">
   </table>
 {% endblock %}  

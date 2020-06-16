@@ -34,6 +34,7 @@ def browse(request):
     folder_id=request.GET.get("id","")
     RNAup_score=request.GET.get("up","")
     RNAfold_MFE=request.GET.get("fold","")
+    readCount=request.GET.get("readCount","")
     return render_to_response('browse.html',locals())
 
 def savefile(file1,name,id_path):
@@ -60,6 +61,8 @@ def uploadfile(request):
 
         RNAfold_MFE = getDefault(request.POST.get("RNAfold_MFE","None"),"None")
         RNAup_score = getDefault(request.POST.get("RNAup_score","None"),"None")
+        readCount = getDefault(request.POST.get("readCount","None"),"None")
+        print("readCount:",readCount)
         way = getDefault(request.POST.get("way","pir"),"pir")
         mtype = getDefault(request.POST.get("browse","regulator"),"regulator")
         folder_id = request.POST.get("folder_id")
@@ -67,7 +70,7 @@ def uploadfile(request):
         task_id=folder_id
 
         print("------------------------")
-        command="bash {4}step6.sh -i {0}{1}/hyb_file_step5.csv -o {0}{1}/step6.csv -t {0}transcript.csv -r {0}regulator.csv -u {2} -f {3}".format(id_path,way,RNAup_score,RNAfold_MFE,script_folder)
+        command="bash {4}step6.sh -i {0}{1}/hyb_file_step5.csv -o {0}{1}/step6.csv -t {0}transcript.csv -r {0}regulator.csv -u {2} -f {3} -c {5}".format(id_path,way,RNAup_score,RNAfold_MFE,script_folder,readCount)
         print(command)
         subprocess.call(command, shell=True)
         subprocess.call("bash {}merge_step6_gene.sh {} {}".format(script_folder,id_path,way), shell=True)
@@ -78,21 +81,21 @@ def uploadfile(request):
         column_name=[]
         if mtype=="regulator":
             column_name=[{"title":"Regulator Name"},
-                         {"title":"Transcript Sum"},
-                         {"title":"Transcript Name"}]
+                         {"title":"# of Target RNAs"},
+                         {"title":"Target RNA Details"}]
         else:
 
             if os.path.isfile(id_path+"gene_file.csv"):
                 print("gene_file exist")
-                column_name=[{"title":"Gene Name"},
-                             {"title":"Transcript Name"},
-                             {"title":"Regulator Sum"},
-                             {"title":"Regulator Name"}]
+                column_name=[{"title":"Target Gene Name"},
+                             {"title":"Target RNA Name"},
+                             {"title":"# of Regulators"},
+                             {"title":"Target Details"}]
             else:
                 print("gene_file not exist")
-                column_name=[{"title":"Transcript Name"},
-                             {"title":"Regulator Sum"},
-                             {"title":"Regulator Name"}]
+                column_name=[{"title":"Target RNA Name"},
+                             {"title":"# of Regulators"},
+                             {"title":"Target Details"}]
     return JsonResponse({"data":column_name,"userID":task_id})
 
 
@@ -104,16 +107,18 @@ def showSeq(seq1,seq2):
     gu_pos=[]
     ngu_pos=[]
     bulge_pos=[]
-    for i in zip(seq1,seq2):
-        print(""*15)
-        i=set(i)
-        print(i)
+    seq1_bulge_pos=[]
+    for j in zip(seq1,seq2):
+        i=set(j)
         if i == {'G','U'} or i == {'G','T'}:
             gu_pos.append(count)
         elif i == {'A','T'} or i == {'C' ,'G'} or i == {'A','U'}:
             pass
         elif "-" in i:
-            bulge_pos.append(count)
+            if j[0] == "-":
+                bulge_pos.append(count)
+            else:
+                seq1_bulge_pos.append(count)
         else:
             ngu_pos.append(count)
 
@@ -121,6 +126,7 @@ def showSeq(seq1,seq2):
 
 
     result_seq2=""
+    result_seq1=""
     for i in range(len(seq2)):
         if i in gu_pos:
             result_seq2+='<span class="gu">'+seq2[i]+'</span>'
@@ -131,37 +137,58 @@ def showSeq(seq1,seq2):
         else:
             result_seq2+=seq2[i]
 
-    result="5'"+seq1+"3'<br>3'"+result_seq2+"5'"
-    return result
+    for i in range(len(seq1)):
+        if i in seq1_bulge_pos:
+            result_seq1+='<span class="bulge">'+seq1[i]+'</span>'
+        else:
+            result_seq1+=seq1[i]
 
+    result="5'"+result_seq1+"3'<br>3'"+result_seq2+"5'"
+    return result
+def h_inof_add_color(h_info):
+    pos=h_info[2].split("-")
+    pos=list(map(int,pos))
+    seq=h_info[0]
+    h_info[0]=seq[:pos[0]-1] + '<span class="reg_on_hyb">' + seq[pos[0]-1:pos[1]] + '</span>' + seq[pos[1]:]
+    h_info[2]='<span class="reg_on_hyb">' + h_info[2] +'</span>'
+
+    return h_info
 def search1(outfile,userID,way):
     file_path=media_path+userID+"/"+way+"/"
-    data = pd.read_csv(file_path+outfile)
-    print(data.head())
-    print(data.columns)
 
 
-    data["RNAup_target_seq"]=data.apply(lambda x :showSeq(x["RNAup_target_seq"],x["RNAup_input_seq"]),axis=1)
 
 
     hybrid_info=["hybrid_seq","hybrid_len","reg_hyb_target_pos","remain_pos"]
-    show_info=["hybrid0","read_count","RNAfold_MFE","regulator_name","regulator_seq","regulator_len","on_reg_pos","rem_tran_target_pos","RNAup_pos","RNAup_score","RNAup_target_seq"]
+    new_hybrid_info=["Hybrid Read","Hybrid Length","Region identified by Regulator","Region identified by Target"]
+    # show_info=["hybrid0","read_count","RNAfold_MFE","regulator_name","regulator_seq","regulator_len","on_reg_pos","rem_tran_target_pos","RNAup_pos","RNAup_score","RNAup_target_seq"]
+    show_info=["hybrid0","read_count","RNAfold_MFE","regulator_name","regulator_len","rem_tran_target_pos","RNAup_pos","RNAup_score","RNAup_target_seq"]
+    new_show_info=["Hybrid Read ID","Read Count","RNAfold MFE","Regulator Name","Regulator Length","CLASH Identified Region","Predicted Target Stie","RNAup Score","Pairing (Top:Target,Bottom:Regulator)"]
     tran_info=["transcript_name","transcript_len"]
+    new_tran_info=["Target RNA Name","Target RNA Length"]
 
-    data=data.fillna("")
 
     tdata=[]
     tcolumn=[]
-    h_info=[hybrid_info]
+    h_info=[new_hybrid_info]
     pre_pos_array=[]
     pos_array=[]
+    pos_info=[new_show_info]
 
-# do not need to use copy
-# bcz need dynamic change
-    pos_info=[show_info]
+    data = pd.read_csv(file_path+outfile,usecols=show_info+hybrid_info+["RNAup_input_seq"])
+    print(data.head())
+    print(data.columns)
 
-    transcript_len=int(data.loc[0,"transcript_len"])
-    transcript_info=[tran_info,list(data.loc[0,tran_info])]
+    # calculate color of seq
+    data["RNAup_target_seq"]=data.apply(lambda x :showSeq(x["RNAup_target_seq"],x["RNAup_input_seq"]),axis=1)
+    data=data.fillna("")
+
+
+    # get transcript info
+    tran_data=pd.read_csv(file_path+outfile,usecols=tran_info,chunksize=1)
+    tran=list(tran_data.get_chunk(1).values[0])
+    transcript_info=[new_tran_info,tran]
+    transcript_len=int(tran[1])
 
 
     for i in data.index:
@@ -172,18 +199,30 @@ def search1(outfile,userID,way):
         tdata.append(show_list)
 
         #h_info
-        h_info.append(list(data.loc[i,hybrid_info]))
+        h_info.append(h_inof_add_color(list(data.loc[i,hybrid_info])))
 
 # hybrid_info for hybrid id
     tcolumn.append({"title":"hybrid_info"})
-    for i in show_info:
-        tcolumn.append({"title":i.replace("_"," ")})
+    for i in new_show_info:
+        tcolumn.append({"title":i})
 
 #-------------- pos array ----------------
     pre_pos_array=data["RNAup_pos"]
 # pre_pos_array=["1-10","2-5","1-4","5-6"]
     for i in range(len(pre_pos_array)):
-        pos_split = list(map(int,pre_pos_array[i].split("-")))
+        #because pos may be negative
+        aaa=pre_pos_array[i].split("-")
+        if len(aaa) == 2:
+            pos_split = list(map(int,aaa))
+        elif len(aaa) == 3:
+            print("====negative pos====")
+            pos_split = [1,int(aaa[2])]
+        else:
+            raise ValueError
+
+        if pos_split[1] > transcript_len:
+            print("====longer then transcript_len====")
+            pos_split[1]=transcript_len
         pos_split.insert(0,i)
         pos_array.append(pos_split)
 
@@ -274,6 +313,7 @@ def site_link(request):
     reg_name=request.GET.get("regulator")
     userID=request.GET.get("userID")
     way=request.GET.get("way","pir")
+    count=request.GET.get("count","0")
     search_file=request.GET.get("sfile","step6")+".csv"
     tTitle=""
     file_path=media_path+userID+"/"+way+"/"
@@ -290,13 +330,13 @@ def site_link(request):
         print("----------------------")
         print(name)
         result,gene_exist=search2(name,userID,way)
-        tTitle="Browse Regulator({}) Detail(Way:{})".format(name,way)
+        tTitle="The Regulator <span class='reg_text'>{}</span> has {} Target RNAs".format(name,count)
         return render_to_response('reg_tran.html',locals())
 
     if reg_name:
-        tTitle="Browse Regulator({}) on Transcript({}) Detail(Way:{})".format(reg_name,name,way)
+        tTitle="For the RNA <span class='tran_text'>{}</span> <br> # of the Regulator <span class='reg_text'>{}</span> target sites = {}".format(name,reg_name,count)
     else:
-        tTitle="Browse Transcript({}) Detail(Way:{})".format(name,way)
+        tTitle="For the RNA <span class='tran_text'>{}</span> <br> # of the Regulator target sites = {}".format(name,count)
 
     return render_to_response('site_table.html',locals())
 
@@ -358,32 +398,34 @@ def usage_upload(request):
         savefile(hyb_file,"upload.zip",id_path)
         print("save3")
 
-
+        cal_time="/usr/bin/time -f \"\t%E real,\t%U user,\t%S sys\" -a -o {}time_log".format(id_path)
         command=". {}env_path.sh".format(script_folder)
         command1="bash {}changeState.sh {} {} {}".format(script_folder,task_id,1,2) 
         command2="bash {}un_zip.sh {}upload.zip".format(script_folder,id_path)
         run1="cd {}".format(id_path)
-        run2="make -f {}makefile preprocess qc={} trim={} link={} len={} slen={} rc={} fd={} in=hyb_file.fastq".format(suite_bin,trimmed_tool,phred_score,adaptor,hyb_len_g,hyb_len_l,readCount,RNAfold_MFE)
-        run3="make -f {}makefile build reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin)
+
+        run2="{} make -f {}makefile preprocess qc={} trim={} link={} len={} slen={} rc={} fd={} in=hyb_file.fastq".format(cal_time,suite_bin,trimmed_tool,phred_score,adaptor,hyb_len_g,hyb_len_l,readCount,RNAfold_MFE)
+        run3="{} make -f {}makefile build reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(cal_time,suite_bin)
+
         run4="mkdir pir hyb clan"
         ## pir   
-        run5="make -f {}makefile detect way=pir llen={} reg_mis={} tran_mis={} hmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,rem_len,reg_mis,tran_mis,hyb_hit_p)
-        run5_1="make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,RNAup_score)
+        run5="{} make -f {}makefile detect way=pir llen={} reg_mis={} tran_mis={} hmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(cal_time,suite_bin,rem_len,reg_mis,tran_mis,hyb_hit_p)
+        run5_1="{} make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq way=pir".format(cal_time,suite_bin,RNAup_score)
         run5_2="mv hyb_file_step5.csv pir/"
         run5_3="rm hyb_file_step4.csv"
         ## hyb   
-        run6="make -f {}makefile detect way=hyb hval={} hmax={} gmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,hyb_thres_h,hyb_hit_h,hyb_overlap_h)
-        run6_1="make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,RNAup_score)
+        run6="{} make -f {}makefile detect way=hyb hval={} hmax={} gmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(cal_time,suite_bin,hyb_thres_h,hyb_hit_h,hyb_overlap_h)
+        run6_1="{} make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq way=hyb".format(cal_time,suite_bin,RNAup_score)
         run6_2="mv hyb_file_step5.csv hyb/"
         run6_3="rm hyb_file_step4.csv"
         ## clan   
-        run7="make -f {}makefile detect way=clan llen={} hmax={} gmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,frag_len_c,hyb_hit_c,hyb_overlap_c)
-        run7_1="make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(suite_bin,RNAup_score)
+        run7="{} make -f {}makefile detect way=clan llen={} hmax={} gmax={} reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq".format(cal_time,suite_bin,frag_len_c,hyb_hit_c,hyb_overlap_c)
+        run7_1="{} make -f {}makefile analyse reg=reg_file.fasta tran=tran_file.fasta in=hyb_file.fastq way=clan".format(cal_time,suite_bin,RNAup_score)
         run7_2="mv hyb_file_step5.csv clan/"
         run7_3="rm hyb_file_step4.csv"
 
         command3="bash {}changeState.sh {} {} {}".format(script_folder,task_id,2,3) 
-        command4='echo "Your analysis is completed,and your file ID is {0}.\n Or you can click this link to see result http://{2}.ee.ncku.edu.tw/master_project/browse?id={0}&up={3}&fold={4}" | mail -s "Analysis completed from {2}" -a "From: CosbiLab <bba753951@{2}.ee.ncku.edu.tw>" {1}'.format(task_id,mail,server,RNAup_score,RNAfold_MFE)
+        command4='echo "Your analysis is completed,and your file ID is {0}.\n Or you can click this link to see result http://{2}.ee.ncku.edu.tw/master_project/browse?id={0}&up={3}&fold={4}&readCount={5}" | mail -s "Analysis completed from {2}" -a "From: CosbiLab <bba753951@{2}.ee.ncku.edu.tw>" {1}'.format(task_id,mail,server,RNAup_score,RNAfold_MFE,readCount)
         command5="bash {}schedule.sh".format(script_folder) 
 
         with open(id_path+"run.sh","w") as fp:

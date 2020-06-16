@@ -31,16 +31,10 @@ function addHoverTip(name,info_table){
 
 function uploadfile() {
     $("#pbar").css("display","flex");
-    console.log("click");//打印服务端返回的数据(调试用)
+    console.log("click");
     var file1=$("input[name='zip_file']").get(0).files[0];
-    //var file2=$("input[name='transcript_file']").get(0).files[0];
-    //var file3=$("input[name='regulator_file']").get(0).files[0];
-    //var file4=$("input[name='gene_file']").get(0).files[0];
     var files_data = new FormData();
     files_data.append("zip_file",file1);
-    //files_data.append("transcript_file",file2);
-    //files_data.append("regulator_file",file3);
-    //files_data.append("gene_file",file4);
 
     $("input[type='text']").each(function(){
         console.log($(this).attr("id"))
@@ -54,8 +48,8 @@ function uploadfile() {
 
 
 	$.ajax({
-		type: "POST",//方法类型
-		url: usage_url ,//url
+		type: "POST",
+		url: usage_url ,
 		data: files_data,
         cache:false,
         processData:false,
@@ -91,7 +85,7 @@ function uploadfile() {
             Swal.fire({
                   icon: 'success',
                   title: 'Check your E-amil',
-                  text: 'You need to recive a mail from us and click the link to start analysis',
+                  html: 'You need to recive a mail from us and <span class="stress_red">click the link</span> to start analysis',
             })
         } ;
 
@@ -107,7 +101,7 @@ btn.addEventListener('click',uploadfile);
 
 
 //upload file hint
-var d_uf="<span class='info'>Please prepare the following files as a \"compressed file\" (.zip) <br><br>And use \"same file name\" as following:<br><br>1. hyb_file.fastq(Required):<br>&nbsp;&nbsp;&nbsp;FASTQ format,for Hybrid sequences<br><br>2. reg_file.fasta(Required):<br>&nbsp;&nbsp;&nbsp;FASTA format,for Regulaotr sequence<br><br>3. tran_file.fasta(Required): <br>&nbsp;&nbsp;&nbsp; FASTA format ,for Transcript sequences<br><br> 4. gene_file.csv(Optional):<br>&nbsp;&nbsp;&nbsp;must have \"transcript_name\" <br>&nbsp;&nbsp;&nbsp;and \"Gene_name\" column name</span>";
+var d_uf="<span class='info'>Please prepare the following files as a \"compressed file\" (.zip) <br><br>And use \"<span class='stress'>same file name</span>\" as following:<br><br><ol><li> <span class='stress'>hyb_file.fastq(Required)</span>:<br>FASTQ format,for Hybrid sequences</li><li><span class='stress'>reg_file.fasta(Required)</span>:<br>FASTA format,for Regulaotr sequence</li><li> <span class='stress'>tran_file.fasta(Required)</span>: <br>FASTA format ,for Transcript sequences</li><li><span class='stress'>gene_file.csv(Optional)</span>:<br>Must have \"transcript_name\" and \"Gene_name\" column name</li></ol></span>";
 var d_em="<span class='info'>We use this mail to inform you how to start the analysis and see the result</span>";
 addHoverTip("#d_uf",d_uf);
 addHoverTip("#d_em",d_em);
@@ -324,13 +318,41 @@ addHoverTip("#d_rs",d_rs);
 
 
 //============= flow click ==============
+var curr_index=0;
 $(".lshow").eq(0).css("display","block");
 $(".rshow").each(function(index){
     $(this).click(function(){
-        $(".rshow").removeClass("rclick");
-        $(".lshow").css("display","none");
+        $(".rshow").eq(curr_index).removeClass("rclick");
+        $(".lshow").eq(curr_index).css("display","none");
         $(".lshow").eq(index).css("display","block");
         $(this).addClass("rclick");
-
+        curr_index=index;
     })
 })
+
+$(".next_btn").click(function(){
+        $(".rshow").eq(curr_index).removeClass("rclick");
+        $(".lshow").eq(curr_index).css("display","none");
+        curr_index++;
+        $(".lshow").eq(curr_index).css("display","block");
+        $(".rshow").eq(curr_index).addClass("rclick");
+})
+
+
+
+//===============upload file =================
+function changefile(name,text){
+  
+  $('input[name='+name+']').bind('change', function () {
+    var filename = $(this).val();
+    console.log(filename);
+    if (/^\s*$/.test(filename)){
+      $(this).prev('span').text(text)
+    }else{
+      $(this).prev('span').text(filename.replace("C:\\fakepath\\", ""));
+    }
+
+  })
+  
+}
+changefile("zip_file","no file");

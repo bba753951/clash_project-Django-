@@ -123,9 +123,9 @@ function uploadfile() {
                         "mRender" : function(data,type,full){
                             var value;
                             if(data[col+1]==="0")
-                                value = "show target site"
+                                value = "show details"
                             else
-                                value = '<a target="_blank" href="'+site_link+"?name="+data[col]+"&mtype="+mtype+"&userID="+result.userID +"&way="+way+'">show target site</a>';
+                                value = '<a target="_blank" href="'+site_link+"?name="+data[col]+"&mtype="+mtype+"&userID="+result.userID +"&way="+way+"&count="+data[col+1]+'">show details</a>';
                             return value
                         }
                     }
@@ -175,6 +175,10 @@ if(RNAup_score != ""){
 if(RNAfold_MFE != ""){
     $('#RNAfold_MFE').val(RNAfold_MFE);
 }
+if(readCount != ""){
+    $('#readCount').val(readCount);
+}
+
 
 
 // add Hover Info

@@ -10,6 +10,7 @@
     var copy_example_url="{% url 'copy_example' %}"
     var folder_id = "{{ folder_id |safe}}";
     var RNAup_score = "{{ RNAup_score |safe}}";
+    var readCount = "{{ readCount |safe}}";
     var RNAfold_MFE = "{{ RNAfold_MFE |safe}}";
 
     {% comment %}var data_url="/master_project/master_media/uploadfile/aaa.txt"{% endcomment %}
@@ -49,7 +50,7 @@
 
     <div class="select_way">
 
-        <div class="ptitle"><b>Select CLASH Analysis Algorithm</b></div>
+        <div class="ptitle"><b>Select CLASH Analysis Algorithm:</b></div>
         <div class="select para">
             <select id="way">
                 <option value="pir">piRTarBase</option>
@@ -61,7 +62,7 @@
     </div>
     <div class="select_type">
 
-        <div class="ptitle"><b>Browse By</b></div>
+        <div class="ptitle"><b>Browse By:</b></div>
         <div class="select para">
             <select id="browse">
                 <option value="regulator">Regulator Name</option>
@@ -76,7 +77,7 @@
 
     <div class="select_score">
 
-        <div class="ptitle"><b>Only View Answers Satisfying</b></div>
+        <div class="ptitle"><b>Only View Answers Satisfying:</b></div>
         <div class="para">
           <label>
               <div id="d_rs">
@@ -94,6 +95,16 @@
               </div>
               <div>
                 <input type="text" id="RNAfold_MFE" placeholder="default:None">
+              </div>
+          </label>
+        </div>
+        <div class="para">
+          <label>
+              <div id="d_rm">
+                Read Count &ge;
+              </div>
+              <div>
+                <input type="text" id="readCount" placeholder="default:None">
               </div>
           </label>
         </div>

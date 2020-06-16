@@ -20,19 +20,28 @@ function addClickTip(array_info,id_name,i,my_pos,at_pos){
 
     $("#"+id_name+i).qtip({
         content: {
-            text:info,
-            button: "close me",},
+            text:info},
+            //button: "close me",},
         show: {
             event: 'click',
             effect: function(offset) {
                 $(this).slideDown(100); // "this" refers to the tooltip
+                var id_text = $("#"+id_name+i).text();
+                $("#"+id_name+i).text("close");
+                $("#"+id_name+i).addClass(id_text);
             }},
 		position: {
             my:my_pos,
             at:at_pos
 		},
         hide: {
-            target: $('#'+id_name+i,'*:not("[type=button]")'),
+            //target: $('#'+id_name+i,'*:not("[type=button]")'),
+            target: $('#'+id_name+i),
+            effect: function(offset) {
+                var id_text = $("#"+id_name+i).attr("class").split(" ")[1]
+                $("#"+id_name+i).text(id_text);
+                $("#"+id_name+i).removeClass(id_text);
+            },
             event: 'click'},
         style: {
                     classes: 'qtip-dark'
@@ -108,7 +117,7 @@ var svg = d3.select("#show_site")
 
 //---------------create scale
 var xScale = d3.scale.linear()
-  .domain([0,seq_len])
+  .domain([0,seq_len+1])
   .range([0,width-2*padding]);
 
 
@@ -152,7 +161,7 @@ for(i=0;i<pos_array.length;i++){
 //---------------plot transcript rect
 var rectSeq = svg.append("rect")
   .attr("fill", "blue")
-  .attr("x", padding)
+  .attr("x", padding+xScale(1))
   .attr("y", rect_seqY)
   .attr("width" , xScale(seq_len))
   .attr("height", rectY*0.8)
@@ -192,11 +201,21 @@ $('#example').DataTable({
 });
 
 // bcuz hybrid_info have column_name at index 0
-function renderTip(){
+//function renderTip(){
 
-    for(i = 0;i < tcol_num;i++){
-        addClickTip(hybrid_info,"hybrid",i,'top left','bottom right')
-    }
+    //for(i = 0;i < tcol_num;i++){
+        //addClickTip(hybrid_info,"hybrid",i,'top left','bottom right')
+    //}
+//}
+//renderTip();
+//$('#example').on('draw.dt',renderTip);
+
+function renderTip(){
+    $(".hyb_btn").each(function(){
+        var id = $(this).attr("id").slice(6);
+        console.log(id);
+        addClickTip(hybrid_info,"hybrid",id,'top left','bottom right');
+    })
 }
 renderTip();
 $('#example').on('draw.dt',renderTip);

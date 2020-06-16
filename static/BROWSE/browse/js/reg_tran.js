@@ -1,14 +1,14 @@
 column1=[
-        {"title":"Transcript Name"},
-        {"title":"Number of sites"},
-        {"title":"More Info"}
+        {"title":"Target RNA Name"},
+        {"title":"# of CLASH Evidences"},
+        {"title":"Target Details"}
     ];
 
 column2=[
-        {"title":"Gene Name"},
-        {"title":"Transcript Name"},
-        {"title":"Number of sites"},
-        {"title":"More Info"}
+        {"title":"Target Gene Name"},
+        {"title":"Target RNA Name"},
+        {"title":"# of CLASH Evidences"},
+        {"title":"Target Details"}
     ];
 
 column=[column1,column2]
@@ -24,9 +24,9 @@ $('#example').DataTable({
             "mRender" : function(data,type,full){
                 var value;
                 if(data[gene_exist+1]+""==="0")
-                    value = "show target site"
+                    value = "show details"
                 else
-                    value = '<a target="_blank" href="'+site_link+"?name="+data[gene_exist]+"&regulator="+regulator_name+"&userID="+userID+"&way="+way+'&mtype=transcript&sfile=ori_reg">show target site</a>';
+                    value = '<a target="_blank" href="'+site_link+"?name="+data[gene_exist]+"&regulator="+regulator_name+"&userID="+userID+"&way="+way+"&count="+data[gene_exist+1]+'&mtype=transcript&sfile=ori_reg">show details</a>';
                 return value
             }
         }

@@ -36,18 +36,18 @@
 {% block title %}Site Table{% endblock %}
 
 {% block main %}
-<p class="tTitle">{{ tTitle }}</p>
+<p class="tTitle">{{ tTitle |safe}}</p>
 <div class="hint">
 <span class="gu">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span>GU mismatch</span>
+<span>GU Mismatch</span>
 <span class="ngu">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span>non-GU mismatch</span>
+<span>non-GU Mismatch</span>
 <span class="bulge">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span>bulge</span>
+<span>Bulge</span>
 <span class="tran_seq">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span>Transcript seq</span>
+<span>Target RNA Sequence</span>
 <span class="up_pos">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span>RNAup pos</span>
+<span>Predicted Target Site</span>
 </div>
 <div id="show_site"></div>
 
