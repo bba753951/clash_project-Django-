@@ -1,5 +1,5 @@
 .tTitle{
-    font-size: 30px;
+    font-size: 3vmin;
     font-weight: bold;
 	margin-bottom: 5%;
 }
@@ -10,10 +10,11 @@
 }
 
 .axis text {
-  font-size: 13px;
+  font-size: 15px;
 }
 
-.qtip { max-width: none !important;  }
+/*.qtip { max-width: none !important;  }*/
+.qtip { max-width: 90% !important;  }
 
 
 #table{
@@ -51,13 +52,13 @@ table{
 	background-color: blue;
 }
 
-tbody{
-	white-space: nowrap;
-}
+/*tbody{*/
+	/*white-space: nowrap;*/
+/*}*/
 .qtable{
 	color : #ffffff;
 	text-shadow: none;
-	font-size:16px;
+	font-size:1.5vmin;
 	text-align: center;
 	border-collapse: collapse;
 }
@@ -74,13 +75,20 @@ tbody{
 .qtable tr th:last-child,.qtable tr td:last-child{
 	border-right:none;
 }
+/*.qtable tr:first-child{*/
+	/*word-break: break-all;*/
+/*}*/
 
+.qtable tr:last-child td:last-child{
+	letter-spacing: 1.2px;
+}
 .hint{
     display:inline-block;
     text-align:right;
 	width:100%;
 	margin-bottom:2%;
 	padding-right: 30px;
+    font-size: 1vmin;
 }
 
 
@@ -96,5 +104,6 @@ tbody{
 }
 
 .reg_on_hyb{
-	color:#52fff6;
+	color:#00ffa2;
 }
+

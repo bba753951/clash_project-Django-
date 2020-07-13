@@ -65,7 +65,7 @@ function addHoverTip(name,info_table){
             },
 		position: {
 			target: $('#show_site'),
-            my:'center',
+            my:'bottom center',
             at:'top center'
 		},
         style: {
@@ -92,9 +92,9 @@ var padding = 20;
 var rectY = 25;
 var width = $('#show_site').width()-2*padding;// svg
 
-var height = (max_level+3)*rectY // svg
+var height = (max_level+4)*rectY // svg
 
-var axisYpos = height-rectY;
+var axisYpos = height - 2*rectY;
 var rect_seqY = axisYpos - rectY;
 
 

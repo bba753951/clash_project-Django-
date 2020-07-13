@@ -3,9 +3,9 @@ file_path=$(dirname $file)
 echo $file_path
 list=$(unzip -l $file)
 
-name1="hyb_file.fastq"
-name2="tran_file.fasta"
-name3="reg_file.fasta"
+name1="read.fastq"
+name2="targetRNA.fasta"
+name3="regulator.fasta"
 name4="gene_file.csv"
 
 function checkfile(){
@@ -39,9 +39,9 @@ echo $tran_path
 echo $reg_path
 echo $gene_path
 
-mv $hyb_path $file_path
-mv $tran_path $file_path
-mv $reg_path $file_path
+mv $hyb_path $file_path/hyb_file.fastq
+mv $tran_path $file_path/tran_file.fasta
+mv $reg_path $file_path/reg_file.fasta
 
 if [ "$gene_path" != "" ];then
     mv $gene_path $file_path

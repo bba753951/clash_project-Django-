@@ -13,7 +13,7 @@
 
 body, html {
   background-color: #EBECF0;
-  font-size: 1vmin;
+  font-size: 2vmin;
   height:100%;
 }
 body {
@@ -24,7 +24,13 @@ body {
 body, p, input, select, textarea, button {
   font-family: 'Montserrat', sans-serif;
   letter-spacing: -0.2px;
-  font-size: 1vmin;
+  font-size: 2vmin;
+}
+@media screen and (max-width: 1000px) {
+
+	body, p, input, select, textarea, button {
+		font-size: 1vmin;
+	}
 }
 input{
 	width:100%;
@@ -110,7 +116,7 @@ header {
 
 .border {
   text-align:center;
-  width: 75%;
+  width: 85%;
   margin: 5% auto;
   padding: 30px 10px;
   border-radius: 16px;
@@ -164,7 +170,7 @@ label{
 	background-color:#e5e5e5;
 	color: #e5e5e5;
 	padding:1px;
-  font-size: 1vmin;
+  font-size: 2vmin;
   line-height:1.5;
 }
 .select select {
@@ -178,7 +184,7 @@ label{
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0 1em;
+  padding: 0 1vmin;
   background-color:#5276f6;
   cursor: pointer;
   pointer-events: none;
@@ -206,7 +212,6 @@ label{
 .btn, button {
   border: 0;
   outline: 0;
-  font-size: 1vmin;
   border-radius: 20px;
   padding: 10px;
   background-color: #e5e5e5;
@@ -256,7 +261,6 @@ input[type="text"]:focus {
 input[type="text"]{
   border: 0;
   outline: 0;
-  font-size: 16px;
   border-radius: 20px;
   padding: 5px;
   background-color: #EBECF0;

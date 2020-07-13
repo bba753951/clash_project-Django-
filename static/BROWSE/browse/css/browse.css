@@ -15,7 +15,7 @@
 .ptitle {
   font-size: 3vmin;
   color: #61677c;
-  margin:40px 0px 20px 0px;
+  margin:3% 0px 1% 0px;
 }
 
 
@@ -171,9 +171,12 @@
 
 
 .para{
-	width:30%;
+	width:20%;
 	margin:auto;
 	margin-bottom:1.5mvin;
+}
+.select_score para{
+	width:30%;
 }
 label{
 	display:flex;

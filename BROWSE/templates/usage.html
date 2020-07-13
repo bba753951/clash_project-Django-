@@ -34,6 +34,7 @@
 <div class="outter">
 <div class="left-opt">
     <h3>PARAMETER</h3>
+<!-- <==============================================================================> -->
 <div class="file-opt lshow">
     <div class="line">
         <div class="left_para">
@@ -67,11 +68,12 @@
         </div>
     </div>
     <div class="next_btn">
-        <button type="button">NEXT STEP</button>
+        <button type="button">NEXT</button>
     </div>
 
 </div>
 
+<!-- <==============================================================================> -->
 <div class="preprocess-opt lshow">
     <div class="line">
         <div class="left_para">
@@ -85,7 +87,7 @@
 
     <div class="line">
         <div class="left_para">
-        <label id="d_hl_g"> Hybrid Length &ge; </label>
+        <label id="d_hl_g"> CLASH Read Length &ge; </label>
         </div>
         <div class="right_para">
         <input type="text" id="hyb_len_g" placeholder="default:17">
@@ -93,7 +95,7 @@
     </div>
     <div class="line">
         <div class="left_para">
-        <label id="d_hl_l"> Hybrid Length &le; </label>
+        <label id="d_hl_l"> CLASH Read Length &le; </label>
         </div>
         <div class="right_para">
         <input type="text" id="hyb_len_l" placeholder="default:70">
@@ -122,17 +124,18 @@
         </div>
     </div>
     <div class="next_btn">
-        <button type="button">NEXT STEP</button>
+        <button type="button">NEXT</button>
     </div>
 </div>
 
+<!-- <==============================================================================> -->
 <div class="quality-opt lshow">
     <div class="line">
         <div class="left_para">
         <label id="d_rc">Read Count &ge;</label>
         </div>
         <div class="right_para">
-        <input type="text" id="readCount" placeholder="defualt:5">
+        <input type="text" id="readCount" placeholder="defualt:None">
         </div>
     </div>
 
@@ -145,15 +148,16 @@
         </div>
     </div>
     <div class="next_btn">
-        <button type="button">NEXT STEP</button>
+        <button type="button">NEXT</button>
     </div>
 </div>
-<div class="quality-opt lshow">
+<!-- <==============================================================================> -->
+<div class="find-opt lshow">
 <!-- <===================pir==============> -->
-     <p> WAY:PIR</p>
+     <p class="findWay"> piRTarBase</p>
     <div class="line">
         <div class="left_para">
-        <label id="d_atrm_p">Align to Regulator Mismatch &le;</label>
+        <label id="d_atrm_p">Mismatch of Aligning to Regulator &le;</label>
         </div>
         <div class="right_para">
         <input type="text" id="reg_mis" placeholder="default:0(max:2)">
@@ -161,7 +165,7 @@
     </div>
     <div class="line">
         <div class="left_para">
-        <label id="d_attm_p">Align to Transcript Mismatch &le;</label>
+        <label id="d_attm_p">Mismatch of Aligning to Target &le;</label>
         </div>
         <div class="right_para">
         <input type="text" id="tran_mis" placeholder="default:0(max:2)">
@@ -177,7 +181,7 @@
     </div>
     <div class="line">
         <div class="left_para">
-        <label id="d_hph_p">Hits per Hybrid &le;</label>
+        <label id="d_hph_p">Hits per Read &le;</label>
         </div>
         <div class="right_para">
         <input type="text" id="hyb_hit_p" placeholder="default:10">
@@ -186,10 +190,10 @@
 
 <!-- <===================hyb==============> -->
 
-     <p> WAY:HYB</p>
+     <p class="findWay"> Hyb</p>
     <div class="line">
         <div class="left_para">
-        <label id="d_hst_h">Hybrid Selection Threshold &le;</label>
+        <label id="d_hst_h">Fragment Selection Threshold &le;</label>
         </div>
         <div class="right_para">
         <input type="text" id="hyb_thres_h" placeholder="default:0.1">
@@ -197,7 +201,7 @@
     </div>
     <div class="line">
         <div class="left_para">
-        <label id="d_obf_h">Overlap between Fragments &le;</label>
+        <label id="d_obf_h">Overlap/Gap between Fragments &le;</label>
         </div>
         <div class="right_para">
         <input type="text" id="hyb_overlap_h" placeholder="default:4">
@@ -205,7 +209,7 @@
     </div>
     <div class="line">
         <div class="left_para">
-        <label id="d_hph_h">Hits per Hybrid &le;</label>
+        <label id="d_hph_h">Hits per Read &le;</label>
         </div>
         <div class="right_para">
         <input type="text" id="hyb_hit_h" placeholder="default:10">
@@ -213,7 +217,7 @@
     </div>
 
 <!-- <===================clan==============> -->
-     <p> WAY:CLAN</p>
+     <p class="findWay"> CLAN</p>
     <div class="line">
         <div class="left_para">
         <label id="d_fl_c">Fragments Length &ge;</label>
@@ -239,9 +243,10 @@
         </div>
     </div>
     <div class="next_btn">
-        <button type="button">NEXT STEP</button>
+        <button type="button">NEXT</button>
     </div>
 </div>
+<!-- <==============================================================================> -->
 <div class="rnaup-opt lshow">
     <div class="line">
         <div class="left_para">
@@ -263,9 +268,9 @@
     </div>
 </div>
 </div>
+<!-- <==============================================================================> -->
 <div class="right-opt">
     <h3>FLOWCHART &nbsp; (CLICK)</h3>
-    {% comment %}<div id="flowchart"></div>{% endcomment %}
     <div class="right-flow">
     <div id="flow_upload" class="divFlow rshow rclick">
         Upload File
@@ -283,7 +288,7 @@
     </div>
 
     <div id="flow_preprocess" class="divFlow rshow">
-        Hybrid-Preprocess
+        CLASH Read Preprocessing
     </div>
     <div id="arrow1" class="arrow">
       <svg version="1.1" 
@@ -299,7 +304,7 @@
 
     </div>
     <div id="flow_quality" class="divFlow rshow">
-        Hybrid-Quality
+        CLASH Read Quality Control
     </div>
     <div id="arrow2" class="arrow">
       <svg version="1.1" 
@@ -313,7 +318,7 @@
         </svg>
     </div>
     <div id="flow_pair" class="divFlow rshow">
-        Find Pairs
+        Find Pairs' Info
     </div>
     <div id="arrow3" class="arrow">
       <svg version="1.1" 

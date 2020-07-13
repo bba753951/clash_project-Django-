@@ -182,9 +182,11 @@ if(readCount != ""){
 
 
 // add Hover Info
-var d_rs="<span class='info'>MFE of Regulator-Target Site (calculated by RNAup)</span>";
-var d_rm="<span class='info'>MFE of hybrid (calculated by RNAfold)</span>";
+var d_rs="<span class='info'>MFE between regulatory RNA and binding site (calculated by RNAup)</span>";
+var d_rm="<span class='info'>MFE of CLASH read (calculated by RNAfold)</span>";
+var d_rc="<span class='info'>read count of CLASH read</span>";
 addHoverTip("#d_rs",d_rs);
 addHoverTip("#d_rm",d_rm);
+addHoverTip("#d_rc",d_rc);
 
 

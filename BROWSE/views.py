@@ -80,7 +80,7 @@ def uploadfile(request):
 
         column_name=[]
         if mtype=="regulator":
-            column_name=[{"title":"Regulator Name"},
+            column_name=[{"title":"Regulatory RNA Name"},
                          {"title":"# of Target RNAs"},
                          {"title":"Target RNA Details"}]
         else:
@@ -89,17 +89,19 @@ def uploadfile(request):
                 print("gene_file exist")
                 column_name=[{"title":"Target Gene Name"},
                              {"title":"Target RNA Name"},
-                             {"title":"# of Regulators"},
+                             {"title":"# of Regulatory RNAs"},
                              {"title":"Target Details"}]
             else:
                 print("gene_file not exist")
                 column_name=[{"title":"Target RNA Name"},
-                             {"title":"# of Regulators"},
+                             {"title":"# of Regulatory RNAs"},
                              {"title":"Target Details"}]
     return JsonResponse({"data":column_name,"userID":task_id})
 
 
 def showSeq(seq1,seq2):
+    seq1=seq1.replace("T","U")
+    seq2=seq2.replace("T","U")
 
     seq2=seq2[::-1]
 
@@ -160,10 +162,10 @@ def search1(outfile,userID,way):
 
 
     hybrid_info=["hybrid_seq","hybrid_len","reg_hyb_target_pos","remain_pos"]
-    new_hybrid_info=["Hybrid Read","Hybrid Length","Region identified by Regulator","Region identified by Target"]
+    new_hybrid_info=["CLASH Read","CLASH read Length","Region identified by Regulator","Region identified by Target"]
     # show_info=["hybrid0","read_count","RNAfold_MFE","regulator_name","regulator_seq","regulator_len","on_reg_pos","rem_tran_target_pos","RNAup_pos","RNAup_score","RNAup_target_seq"]
     show_info=["hybrid0","read_count","RNAfold_MFE","regulator_name","regulator_len","rem_tran_target_pos","RNAup_pos","RNAup_score","RNAup_target_seq"]
-    new_show_info=["Hybrid Read ID","Read Count","RNAfold MFE","Regulator Name","Regulator Length","CLASH Identified Region","Predicted Target Stie","RNAup Score","Pairing (Top:Target,Bottom:Regulator)"]
+    new_show_info=["CLASH Read ID","Read Count","RNAfold MFE","Regulatory RNA Name","Regulatory RNA Length","CLASH Identified Region","Predicted Target Stie","RNAup Score","Pairing (Top:Target,Bottom:Regulator)"]
     tran_info=["transcript_name","transcript_len"]
     new_tran_info=["Target RNA Name","Target RNA Length"]
 
@@ -330,13 +332,13 @@ def site_link(request):
         print("----------------------")
         print(name)
         result,gene_exist=search2(name,userID,way)
-        tTitle="The Regulator <span class='reg_text'>{}</span> has {} Target RNAs".format(name,count)
+        tTitle="The regulatory RNA <span class='reg_text'>{}</span> has {} target RNAs".format(name,count)
         return render_to_response('reg_tran.html',locals())
 
     if reg_name:
-        tTitle="For the RNA <span class='tran_text'>{}</span> <br> # of the Regulator <span class='reg_text'>{}</span> target sites = {}".format(name,reg_name,count)
+        tTitle="For the target RNA <span class='tran_text'>{}</span> <br> # of the regulatory RNA <span class='reg_text'>{}</span> target evidences = {}".format(name,reg_name,count)
     else:
-        tTitle="For the RNA <span class='tran_text'>{}</span> <br> # of the Regulator target sites = {}".format(name,count)
+        tTitle="For the target RNA <span class='tran_text'>{}</span> <br> # of regulatory RNAs target = {}".format(name,count)
 
     return render_to_response('site_table.html',locals())
 
@@ -370,7 +372,7 @@ def usage_upload(request):
         trimmed_tool = getDefault(request.POST.get("trimmed_tool","flexbar"),"flexbar")
 
         # quality
-        readCount = getDefault(request.POST.get("readCount",5),5)
+        readCount = getDefault(request.POST.get("readCount","None"),"None")
         RNAfold_MFE = getDefault(request.POST.get("RNAfold_MFE","None"),"None")
 
         # find pairs 
@@ -425,7 +427,7 @@ def usage_upload(request):
         run7_3="rm hyb_file_step4.csv"
 
         command3="bash {}changeState.sh {} {} {}".format(script_folder,task_id,2,3) 
-        command4='echo "Your analysis is completed,and your file ID is {0}.\n Or you can click this link to see result http://{2}.ee.ncku.edu.tw/master_project/browse?id={0}&up={3}&fold={4}&readCount={5}" | mail -s "Analysis completed from {2}" -a "From: CosbiLab <bba753951@{2}.ee.ncku.edu.tw>" {1}'.format(task_id,mail,server,RNAup_score,RNAfold_MFE,readCount)
+        command4='echo "Your analysis is completed,and your Job ID is {0}.\n Or you can click this link to see result http://{2}.ee.ncku.edu.tw/master_project/browse?id={0}&up={3}&fold={4}&readCount={5}" | mail -s "Analysis completed from {2}" -a "From: CosbiLab <bba753951@{2}.ee.ncku.edu.tw>" {1}'.format(task_id,mail,server,RNAup_score,RNAfold_MFE,readCount)
         command5="bash {}schedule.sh".format(script_folder) 
 
         with open(id_path+"run.sh","w") as fp:
@@ -456,7 +458,7 @@ def usage_upload(request):
             fp.write(task_id+","+mail+",0\n")
 
 
-        infoTxt="<span class='info'>Adaptor Sequence: {}<br><br> Hybrid Length &le;{} <br><br> Hybrid Length &ge;{} <br><br> Phred Score &le;{} <br><br> Trimmed Tool:{} <br><br> Read Count &ge;{} <br><br> RNAfold_MFE &le; {}<br><br>Way:PIR <br><br>Align to Regulator Mismatch &le; {}<br><br>Align to Transcript Mismatch &le; {} <br><br>Remaining Sequence Length &ge;{} <br><br> Hits per Hybrid &le; {}<br><br>Way:HYB<br><br>Hybrid Selection Threshold &le;{} <br><br>Overlap between Fragments &le;{} <br><br>Hits per Hybrid &le;{}<br><br>Way:CLAN<br><br>Fragments Length &ge;{}<br><br>Overlap between Fragments &le;{}<br><br>Hits per Fragment &le;{} <br><br> RNAup_score &le; {} <br></span>".format(adaptor,hyb_len_g,hyb_len_l,phred_score,trimmed_tool,readCount,RNAfold_MFE,reg_mis,tran_mis,rem_len,hyb_hit_p,hyb_thres_h,hyb_overlap_h,hyb_hit_h,frag_len_c,hyb_overlap_c,hyb_hit_c,RNAup_score)
+        infoTxt="<span class='info'>Adaptor Sequence: {}<br><br> CLASH read Length &ge;{} <br><br> CLASH read Length &le;{} <br><br> Phred Score &ge;{} <br><br> Trimmed Tool:{} <br><br> Read Count &ge;{} <br><br> RNAfold_MFE &le; {}<br><br>Way:PIR <br><br>Align to Regulator Mismatch &le; {}<br><br>Align to Transcript Mismatch &le; {} <br><br>Remaining Sequence Length &ge;{} <br><br> Hits per read &le; {}<br><br>Way:HYB<br><br>Fragement Selection Threshold &le;{} <br><br>Overlap between Fragments &le;{} <br><br>Hits per read &le;{}<br><br>Way:CLAN<br><br>Fragments Length &ge;{}<br><br>Overlap between Fragments &le;{}<br><br>Hits per Fragment &le;{} <br><br> RNAup_score &le; {} <br></span>".format(adaptor,hyb_len_g,hyb_len_l,phred_score,trimmed_tool,readCount,RNAfold_MFE,reg_mis,tran_mis,rem_len,hyb_hit_p,hyb_thres_h,hyb_overlap_h,hyb_hit_h,frag_len_c,hyb_overlap_c,hyb_hit_c,RNAup_score)
         with open(id_path+"info_para.txt","w") as fp:
             fp.write(infoTxt)
             

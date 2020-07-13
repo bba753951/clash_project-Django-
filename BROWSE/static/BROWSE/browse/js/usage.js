@@ -14,8 +14,8 @@ function addHoverTip(name,info_table){
             },
 		position: {
 			//target: $('#show_site'),
-            my:'bottom right',
-            at:'top center'
+            my:'top right',
+            at:'bottom center'
 		},
         style: {
               classes: 'qtip-dark'
@@ -101,18 +101,18 @@ btn.addEventListener('click',uploadfile);
 
 
 //upload file hint
-var d_uf="<span class='info'>Please prepare the following files as a \"compressed file\" (.zip) <br><br>And use \"<span class='stress'>same file name</span>\" as following:<br><br><ol><li> <span class='stress'>hyb_file.fastq(Required)</span>:<br>FASTQ format,for Hybrid sequences</li><li><span class='stress'>reg_file.fasta(Required)</span>:<br>FASTA format,for Regulaotr sequence</li><li> <span class='stress'>tran_file.fasta(Required)</span>: <br>FASTA format ,for Transcript sequences</li><li><span class='stress'>gene_file.csv(Optional)</span>:<br>Must have \"transcript_name\" and \"Gene_name\" column name</li></ol></span>";
+var d_uf="<span class='info'>Please prepare the following files as a \"compressed file\" (.zip) <br><br>And use \"<span class='stress'>same file name</span>\" as following:<br><br><ol><li> <span class='stress'>read.fastq(Required)</span>:<br>FASTQ format,for CLASH read</li><li><span class='stress'>regulator.fasta(Required)</span>:<br>FASTA format,for regulaotry RNA</li><li> <span class='stress'>targetRNA.fasta(Required)</span>: <br>FASTA format ,for target RNA (transcript)</li><li><span class='stress'>gene_file.csv(Optional)</span>:<br>Must have \"transcript_name\" and \"Gene_name\" column name</li></ol></span>";
 var d_em="<span class='info'>We use this mail to inform you how to start the analysis and see the result</span>";
 addHoverTip("#d_uf",d_uf);
 addHoverTip("#d_em",d_em);
 
 // preprocess hint
 
-var d_as="<span class='info'> Remove adaptor sequence from hybrid reads.<br><br> Such as:<br>Illumina: AGATCGGAAGAGC<br>Small RNA: TGGAATTCTCGG<br>Nextera: CTGTCTCTTATA</span>";
-var d_hl_g="<span class='info'>After trimming adaptor,select the hybrid lenght (greater than) <br><br>You can\'t use 0 !!!</span>";
-var d_hl_l="<span class='info'>After trimming adaptor,select the hybrid lenght (less than) <br><br>You can\'t use 0 !!!</span>";
+var d_as="<span class='info'> Remove adapter sequence from CLASH reads.<br><br> Such as:<br>Illumina: AGATCGGAAGAGC<br>Small RNA: TGGAATTCTCGG<br>Nextera: CTGTCTCTTATA</span>";
+var d_hl_g="<span class='info'>After trimming adapter,select the CLASH length (greater than) <br><br>You can\'t use 0 !!!</span>";
+var d_hl_l="<span class='info'>After trimming adapter,select the CLASH length (less than) <br><br>You can\'t use 0 !!!</span>";
 var d_ps="<span class='info'>Trim low-quality ends from reads in addition to adapter removal</span>";
-var d_tt="<span class='info'>Select which program to trim adaptor </span>";
+var d_tt="<span class='info'>Select which program to trim adapter </span>";
 
 addHoverTip("#d_as",d_as);
 addHoverTip("#d_hl_g",d_hl_g);
@@ -121,24 +121,24 @@ addHoverTip("#d_ps",d_ps);
 addHoverTip("#d_tt",d_tt);
 
 // quality
-var d_rc="<span class='info'>Select hyrbrid's \"read count\" (greater equal)</span>";
-var d_rm="<span class='info'>Use \"RNAfold\" (from ViennaRNA package) to calculate \"minimum free energy\" (mfe) of hybrid reads.<br><br>This option selects the \"RNAfold_MFE\" column (less equal).<br><br>You can use None to not select</span>";
+var d_rc="<span class='info'>Select \"read count\" of CLASH read (greater equal)</span>";
+var d_rm="<span class='info'>Use \"RNAfold\" (from ViennaRNA package) to calculate \"minimum free energy\" (mfe) of CLASH reads.<br><br>This option selects the \"RNAfold_MFE\" column (less equal).<br><br>You can use None to not select</span>";
 
 addHoverTip("#d_rc",d_rc);
 addHoverTip("#d_rm",d_rm);
 // Find Pairs
 // -------- pir ----------
-var d_atrm_p="<span class='info'>Use \"bowtie\" to align regulator sequence to hybrid reads.<br><br> You can choose the mismatch count between 0 to 2</span>";
-var d_attm_p="<span class='info'>Use \"bowtie\" to align remaining sequence to transcript sequence.<br><br>You can choose the mismatch count between 0 to 2</span>";
-var d_rsl_p="<span class='info'>Select sequence length of remaining sequence which gets from hybrid reads (greater than)</span>";
-var d_hph_p="<span class='info'>Max hits per hybrid (not including different of position)</span>";
+var d_atrm_p="<span class='info'>Use \"bowtie\" to align regulatory to CLASH reads.<br><br> You can choose the mismatch count between 0 to 2</span>";
+var d_attm_p="<span class='info'>Use \"bowtie\" to align remaining sequence to target RNA.<br><br>You can choose the mismatch count between 0 to 2</span>";
+var d_rsl_p="<span class='info'>Select sequence length of remaining sequence which gets from CLASH read (greater than)</span>";
+var d_hph_p="<span class='info'>Max hits per CLASH read (not including different of position)</span>";
 // -------- hyb ----------
-var d_hst_h="<span class='info'>Hybrid selection threshold </span>";
-var d_obf_h="<span class='info'>Max gap/overlap between hybrid bits </span>";
-var d_hph_h="<span class='info'>Max hits per hybrid (including different of position)</span>";
+var d_hst_h="<span class='info'>Fragment selection threshold </span>";
+var d_obf_h="<span class='info'>Max gap/overlap between fragments </span>";
+var d_hph_h="<span class='info'>Max hits per read (including different of position)</span>";
 // -------- clan ----------
 var d_fl_c="<span class='info'>Minimum length for each fragment </span>";
-var d_obf_c="<span class='info'>Maximum overlap allowed between mapped regions </span>";
+var d_obf_c="<span class='info'>Maximum overlap allowed between fragments </span>";
 var d_hpf_c="<span class='info'>Number of maximum hits for each maximal fragment</span>";
 
 addHoverTip("#d_atrm_p",d_atrm_p);
@@ -152,7 +152,7 @@ addHoverTip("#d_fl_c",d_fl_c);
 addHoverTip("#d_obf_c",d_obf_c);
 addHoverTip("#d_hpf_c",d_hpf_c);
 // analyse
-var d_rs="<span class='info'>Use \"RNAup\" (from ViennaRNA package) to calculate the \"thermodynamics\" of regulator sequence and transcript sequence and find the target pos.<br><br>This option selects the \"RNAup_score\" column (less equal).<br><br>You can use None to not select</span>";
+var d_rs="<span class='info'>Use \"RNAup\" (from ViennaRNA package) to calculate the \"thermodynamics\" of regulatory RNA and target RNA ,then find the binding site.<br><br>This option selects the \"RNAup_score\" column (less equal).<br><br>You can use None to not select</span>";
 
 addHoverTip("#d_rs",d_rs);
 
