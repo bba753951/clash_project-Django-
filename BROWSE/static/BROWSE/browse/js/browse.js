@@ -86,7 +86,6 @@ function uploadfile() {
         files_data.append($(this).attr("id"),$(this).val());
     })
     mtype=$("#browse").val();
-    way=$("#way").val();
 
 
 	$.ajax({
@@ -98,6 +97,8 @@ function uploadfile() {
         processData:false,
         contentType:false,
 		success: function (result) {
+            //var way=$("#way").val();
+            var way=result.way;
 			console.log(result);
             var col = 0;
             if(result.data.length > 3){col=1};
