@@ -85,8 +85,8 @@ a {
 
 nav ul {
   float: right;
-  margin-top: 63px;
-  margin-right: 30px;
+  margin-top: 1%;
+  margin-right: 1%;
 }
 nav ul li {
   display: inline-block;
@@ -94,7 +94,7 @@ nav ul li {
 nav ul li a {
   float: right;
   color: #000;
-  margin-left: 90px;
+  margin-left: 45px;
   padding-bottom: 4px;
   font-size: 3vmin;
   border-bottom: 2px solid transparent;
@@ -117,8 +117,8 @@ header {
 .border {
   text-align:center;
   width: 85%;
-  margin: 5% auto;
-  padding: 30px 10px;
+  margin: 1% auto;
+  padding: 20px;
   border-radius: 16px;
   background: #ecf0f3;
   box-shadow: 4px 4px 4px 0px #d1d9e6 inset, -4px -4px 4px 0px #ffffff inset;

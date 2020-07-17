@@ -68,8 +68,13 @@ def uploadfile(request):
         id_path=media_path+folder_id+"/"
         task_id=folder_id
 
-        with open(id_path+"findway.csv","r") as f:
-            way = f.read().strip()
+
+        if os.path.isfile("findway.csv"):
+            with open(id_path+"findway.csv","r") as f:
+                way = f.read().strip()
+        else:
+            print("no findway")
+            way="clan"
 
         print("way:",way)
 
@@ -318,7 +323,7 @@ def site_link(request):
     mtype=request.GET.get("mtype")
     reg_name=request.GET.get("regulator")
     userID=request.GET.get("userID")
-    way=request.GET.get("way","pir")
+    way=request.GET.get("way","clan")
     count=request.GET.get("count","0")
     search_file=request.GET.get("sfile","step6")+".csv"
     tTitle=""

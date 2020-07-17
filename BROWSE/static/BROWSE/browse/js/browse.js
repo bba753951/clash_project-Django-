@@ -183,9 +183,9 @@ if(readCount != ""){
 
 
 // add Hover Info
-var d_rs="<span class='info'>MFE between regulatory RNA and binding site (calculated by RNAup)</span>";
-var d_rm="<span class='info'>MFE of CLASH read (calculated by RNAfold)</span>";
-var d_rc="<span class='info'>read count of CLASH read</span>";
+var d_rc="<span class='info'>Select \"read count\" of CLASH read (greater equal)</span>";
+var d_rm="<span class='info'>Use \"RNAfold\" (from ViennaRNA package) to calculate \"minimum free energy\" (mfe) of CLASH reads.<br><br>This option selects the \"RNAfold_MFE\" column (less equal).<br><br>You can use None to not select</span>";
+var d_rs="<span class='info'>Use \"RNAup\" (from ViennaRNA package) to calculate the \"thermodynamics\" of regulatory RNA and target RNA ,and find the binding site.<br><br>This option selects the \"RNAup_score\" column (less equal).<br><br>You can use None to not select</span>";
 addHoverTip("#d_rs",d_rs);
 addHoverTip("#d_rm",d_rm);
 addHoverTip("#d_rc",d_rc);

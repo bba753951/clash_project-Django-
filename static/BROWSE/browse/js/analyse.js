@@ -28,16 +28,80 @@ function addHoverTip(name,info_table){
         $(this).css("opacity",1)
     });
 }
+function addClickTip(name,info_table){
+
+    $(name).qtip({
+        content: {
+            text:info_table,
+            button:"close me"
+        },
+        show: {
+            event: 'click',
+            effect: function(offset) {
+                $(this).slideDown(100); // "this" refers to the tooltip
+            }},
+        hide: {
+            //target: $('#'+id_name+i,'*:not("[type=button]")'),
+            target: $(name),
+            event: 'click'
+        },
+		position: {
+			//target: $('#show_site'),
+            my:'bottom center',
+            at:'top center'
+		},
+        style: {
+              classes: 'qtip-dark'
+              //classes: 'qtip-dark qtip-jtools'
+        }
+    })  
+    $(name).hover(function(){
+        $(this).css("opacity",0.2)
+    },function(){
+        $(this).css("opacity",1)
+    });
+}
 
 function uploadfile() {
-    $("#pbar").css("display","flex");
     console.log("click");
     //var file1=$("input[name='zip_file']").get(0).files[0];
     var files_data = new FormData();
     //files_data.append("zip_file",file1);
+    if ($("#adaptor").val() === "" && $("#trimmed_tool").val() != "trim_galore" ){
+        Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'If you don\'t input the adapter sequence,you only can choose "trim_galore"',
+            
+        });
+        throw "wrong adapter";
+
+    }
+    if (! /\s*@\s*/.test($("#mail").val())){
+        Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Wrong E-mail address',
+            
+        });
+        throw "wrong mail";
+
+    }
+
 
     $("input[type='file']").each(function(){
         console.log($(this).attr("name"))
+        if ($(this).prev("span").text() === "no file"){
+            Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Upload file can\'t be empty',
+                
+            });
+            throw $(this).attr("name")+" file empty";
+
+        }
+
         var file1=$(this).get(0).files[0];
         files_data.append($(this).attr("name"),file1);
     });
@@ -53,6 +117,7 @@ function uploadfile() {
     })
 
 
+    $("#pbar").css("display","flex");
 
 	$.ajax({
 		type: "POST",
@@ -108,61 +173,73 @@ btn.addEventListener('click',uploadfile);
 
 
 //upload file hint
-var d_uf="<span class='info'>Please prepare the following files as a \"compressed file\" (.zip) <br><br>And use \"<span class='stress'>same file name</span>\" as following:<br><br><ol><li> <span class='stress'>read.fastq(Required)</span>:<br>FASTQ format,for CLASH read</li><li><span class='stress'>regulator.fasta(Required)</span>:<br>FASTA format,for regulaotry RNA</li><li> <span class='stress'>targetRNA.fasta(Required)</span>: <br>FASTA format ,for target RNA (transcript)</li><li><span class='stress'>gene_file.csv(Optional)</span>:<br>Must have \"transcript_name\" and \"Gene_name\" column name</li></ol></span>";
-var d_em="<span class='info'>We use this mail to inform you how to start the analysis and see the result</span>";
-addHoverTip("#d_uf",d_uf);
-addHoverTip("#d_em",d_em);
+var m_crf="<span class='info'>A compressed file <span class='stress'>(.zip)</span> about CLASH Read in <span class='stress'>FASTQ</span> format.</span>";
+var m_rrf="<span class='info'>A compressed file <span class='stress'>(.zip)</span> about regulatory RNA in <span class='stress'>FASTA </span>format.</span>";
+var m_trf="<span class='info'>A compressed file <span class='stress'>(.zip)</span> about target RNA in <span class='stress'>FASTA</span> format.</span>";
+
+addClickTip("#m_crf",m_crf);
+addClickTip("#m_rrf",m_rrf);
+addClickTip("#m_trf",m_trf);
 
 // preprocess hint
+var m_tt="<span class='info'>Select a program to trim 3\' adapter </span>";
+var m_as="<span class='info'> Adapter sequence to be trimmed. <br><br> If not specified explicitly, Trim Galore will try to auto-detect whether the Illumina universal, Nextera transposase or Illumina small RNA adapter sequence was used. <br><br> Such as:<br>Illumina: AGATCGGAAGAGC<br>Small RNA: TGGAATTCTCGG<br>Nextera: CTGTCTCTTATA</span>";
+var m_bs="<span class='info'> Trimming of 5' adapter sequences.<br><br> Depending on the experimental design, 5' linkers may contain a variable-length barcode for sample multiplexing and a random nucleotide prefix for monitoring of PCR amplification artefacts. </span>";
+var m_crl_g="<span class='info'>After trimming adapter,select the CLASH length <span class='stress'>(greater than)</span> <br>You can\'t use 0 !!!</span>";
+var m_crl_l="<span class='info'>After trimming adapter,select the CLASH length <span class='stress'>(less than)</span> <br>You can\'t use 0 !!!</span>";
+var m_ps="<span class='info'>Trim low-quality ends from reads in addition to adapter removal</span>";
 
-var d_as="<span class='info'> Remove adapter sequence from CLASH reads.<br><br> Such as:<br>Illumina: AGATCGGAAGAGC<br>Small RNA: TGGAATTCTCGG<br>Nextera: CTGTCTCTTATA</span>";
-var d_hl_g="<span class='info'>After trimming adapter,select the CLASH length (greater than) <br><br>You can\'t use 0 !!!</span>";
-var d_hl_l="<span class='info'>After trimming adapter,select the CLASH length (less than) <br><br>You can\'t use 0 !!!</span>";
-var d_ps="<span class='info'>Trim low-quality ends from reads in addition to adapter removal</span>";
-var d_tt="<span class='info'>Select which program to trim adapter </span>";
-
-addHoverTip("#d_as",d_as);
-addHoverTip("#d_hl_g",d_hl_g);
-addHoverTip("#d_hl_l",d_hl_l);
-addHoverTip("#d_ps",d_ps);
-addHoverTip("#d_tt",d_tt);
+addClickTip("#m_tt",m_tt);
+addClickTip("#m_as",m_as);
+addClickTip("#m_bs",m_bs);
+addClickTip("#m_crl_g",m_crl_g);
+addClickTip("#m_crl_l",m_crl_l);
+addClickTip("#m_ps",m_ps);
 
 // quality
-var d_rc="<span class='info'>Select \"read count\" of CLASH read (greater equal)</span>";
-var d_rm="<span class='info'>Use \"RNAfold\" (from ViennaRNA package) to calculate \"minimum free energy\" (mfe) of CLASH reads.<br><br>This option selects the \"RNAfold_MFE\" column (less equal).<br><br>You can use None to not select</span>";
+//var d_rc="<span class='info'>Select \"read count\" of CLASH read (greater equal)</span>";
+//var d_rm="<span class='info'>Use \"RNAfold\" (from ViennaRNA package) to calculate \"minimum free energy\" (mfe) of CLASH reads.<br><br>This option selects the \"RNAfold_MFE\" column (less equal).<br><br>You can use None to not select</span>";
 
-addHoverTip("#d_rc",d_rc);
-addHoverTip("#d_rm",d_rm);
+//addHoverTip("#d_rc",d_rc);
+//addHoverTip("#d_rm",d_rm);
+//
 // Find Pairs
+var m_a="<span class='info'> Select a algorithm to find RNA-RNA pair</span>"
+addClickTip("#m_a",m_a);
 // -------- pir ----------
-var d_atrm_p="<span class='info'>Use \"bowtie\" to align regulatory to CLASH reads.<br><br> You can choose the mismatch count between 0 to 2</span>";
-var d_attm_p="<span class='info'>Use \"bowtie\" to align remaining sequence to target RNA.<br><br>You can choose the mismatch count between 0 to 2</span>";
-var d_rsl_p="<span class='info'>Select sequence length of remaining sequence which gets from CLASH read (greater than)</span>";
-var d_hph_p="<span class='info'>Max hits per CLASH read (not including different of position)</span>";
+var m_mar_p="<span class='info'>Use \"bowtie1\" to align regulatory RNA to CLASH reads.<br><br> You can choose the mismatch count between 0 to 2</span>";
+var m_mat_p="<span class='info'>Use \"bowtie1\" to align remaining sequence to target RNA.<br><br>You can choose the mismatch count between 0 to 2</span>";
+var m_rsl_p="<span class='info'>Select sequence length of remaining sequence which gets from CLASH read (greater than)</span>";
+var m_hpr_p="<span class='info'>Max number of fragments mapping to reference on CLASH read.If same reference sequence has different position mapped,just count once</span>";
+addClickTip("#m_mar_p",m_mar_p);
+addClickTip("#m_mat_p",m_mat_p);
+addClickTip("#m_rsl_p",m_rsl_p);
+addClickTip("#m_hpr_p",m_hpr_p);
+
 // -------- hyb ----------
-var d_hst_h="<span class='info'>Fragment selection threshold </span>";
-var d_obf_h="<span class='info'>Max gap/overlap between fragments </span>";
-var d_hph_h="<span class='info'>Max hits per read (including different of position)</span>";
+var m_hst_h="<span class='info'>Select mapping score of framents (same as blast e-value).</span>";
+var m_obf_h="<span class='info'>When identifying RNA-RNA pair,maximum gap/overlap allowed between fragments </span>";
+var m_hpr_h="<span class='info'>Max number of fragments mapping to reference on CLASH read.If same reference sequence has different position mapped,repeatedly count</span>";
+addClickTip("#m_hst_h",m_hst_h);
+addClickTip("#m_obf_h",m_obf_h);
+addClickTip("#m_hpr_h",m_hpr_h);
+
 // -------- clan ----------
-var d_fl_c="<span class='info'>Minimum length for each fragment </span>";
-var d_obf_c="<span class='info'>Maximum overlap allowed between fragments </span>";
-var d_hpf_c="<span class='info'>Number of maximum hits for each maximal fragment</span>";
+var m_fl_c="<span class='info'>Minimum length for each fragment </span>";
+var m_obf_c="<span class='info'>When identifying RNA-RNA pair,maximum overlap allowed between fragments </span>";
+var m_hpf_c="<span class='info'>Number of maximum hits for each maximal fragment</span>";
+addClickTip("#m_fl_c",m_fl_c);
+addClickTip("#m_obf_c",m_obf_c);
+addClickTip("#m_hpf_c",m_hpf_c);
 
-addHoverTip("#d_atrm_p",d_atrm_p);
-addHoverTip("#d_attm_p",d_attm_p);
-addHoverTip("#d_rsl_p",d_rsl_p);
-addHoverTip("#d_hph_p",d_hph_p);
-addHoverTip("#d_hst_h",d_hst_h);
-addHoverTip("#d_obf_h",d_obf_h);
-addHoverTip("#d_hph_h",d_hph_h);
-addHoverTip("#d_fl_c",d_fl_c);
-addHoverTip("#d_obf_c",d_obf_c);
-addHoverTip("#d_hpf_c",d_hpf_c);
 // analyse
-var d_rs="<span class='info'>Use \"RNAup\" (from ViennaRNA package) to calculate the \"thermodynamics\" of regulatory RNA and target RNA ,then find the binding site.<br><br>This option selects the \"RNAup_score\" column (less equal).<br><br>You can use None to not select</span>";
+//var d_rs="<span class='info'>Use \"RNAup\" (from ViennaRNA package) to calculate the \"thermodynamics\" of regulatory RNA and target RNA ,and find the binding site.<br><br>This option selects the \"RNAup_score\" column (less equal).<br><br>You can use None to not select</span>";
 
-addHoverTip("#d_rs",d_rs);
+//addHoverTip("#d_rs",d_rs);
 
+// mail
+var m_em="<span class='info'>We use this mail address to inform you how to start the analysis and browse the result</span>";
+addClickTip("#m_em",m_em);
 
 //============= flow click ==============
 var curr_index=0;
@@ -193,10 +270,18 @@ function changefile(name,text){
   $('input[name='+name+']').bind('change', function () {
     var filename = $(this).val();
     console.log(filename);
-    if (/^\s*$/.test(filename)){
+    if (/\s*\.zip$/.test(filename)){
+      $(this).prev('span').text(filename.replace("C:\\fakepath\\", ""));
+    }else if (filename === ""){
       $(this).prev('span').text(text)
     }else{
-      $(this).prev('span').text(filename.replace("C:\\fakepath\\", ""));
+      $(this).prev('span').text(text)
+        Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'File must be zip format',
+            
+        })
     }
 
   })
